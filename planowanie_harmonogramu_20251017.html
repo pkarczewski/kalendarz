@@ -25,11 +25,24 @@
         
         .header {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 10px;
             margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 1px solid #e5e5e5;
+        }
+
+        .back-link {
+            color: #2196F3;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
         }
         
         h1 {
@@ -171,6 +184,7 @@
         .time-input-group {
             display: flex;
             flex-direction: column;
+            position: relative;
         }
         
         .time-input-group label {
@@ -206,12 +220,19 @@
         .time-input-group .error-message {
             font-size: 11px;
             color: #e74c3c;
-            margin-top: 4px;
+            position: absolute;
+            bottom: -18px;
+            left: 0;
+            white-space: nowrap;
             display: none;
         }
 
         .time-input-group.has-error .error-message {
             display: block;
+        }
+
+        .time-slot {
+            margin-bottom: 28px;
         }
         
         .btn {
@@ -585,8 +606,8 @@
 <body>
     <div class="container">
         <div class="header">
+            <a href="index.html" class="back-link">← Strona główna</a>
             <h1>Utwórz harmonogram</h1>
-            <a href="index.html" class="close-btn" aria-label="Wróć do strony głównej">×</a>
         </div>
 
         <form id="scheduleForm">
