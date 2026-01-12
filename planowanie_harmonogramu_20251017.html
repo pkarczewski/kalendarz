@@ -735,7 +735,7 @@
             TIME_INTERVAL: 30,
             DEFAULT_TIME_FROM: '09:00',
             DEFAULT_TIME_TO: '17:00',
-            BASE_URL: 'wybor_terminu_20251017.html?schedule='
+            BASE_URL: new URL('wybor_terminu_20251017.html', window.location.href).href + '?schedule='
         };
 
         const ERROR_MESSAGES = {
@@ -1317,12 +1317,17 @@
             const linkStrong = document.createElement('strong');
             linkStrong.textContent = 'Link publiczny:';
             const linkBr = document.createElement('br');
-            const linkText = createTextNode(data.link);
-            
+            const linkAnchor = document.createElement('a');
+            linkAnchor.href = data.link;
+            linkAnchor.textContent = data.link;
+            linkAnchor.target = '_blank';
+            linkAnchor.style.color = '#2196F3';
+            linkAnchor.style.wordBreak = 'break-all';
+
             linkDisplayText.innerHTML = '';
             linkDisplayText.appendChild(linkStrong);
             linkDisplayText.appendChild(linkBr);
-            linkDisplayText.appendChild(linkText);
+            linkDisplayText.appendChild(linkAnchor);
             
             // Set up copy button
             copyBtn.onclick = () => copyToClipboard(data.link);
