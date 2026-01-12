@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rezerwacja spotkania</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f8fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+
+
+        .content {
+            display: flex;
+            min-height: 500px;
+        }
+
+        .calendar-section {
+            flex: 1;
+            background: linear-gradient(135deg, #42a5f5 0%, #1976d2 100%);
+            color: white;
+            padding: 40px;
+        }
+
+        .meeting-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .nav-arrow {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+
+        .nav-arrow:hover {
+            opacity: 0.7;
+            transform: scale(1.1);
+        }
+
+        .nav-arrow:focus {
+            outline: 2px solid rgba(255,255,255,0.5);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        .current-month {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .calendar {
+            width: 100%;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.2s;
+        }
+
+        .day:hover:not(.empty):not(.disabled) {
+            background: rgba(255,255,255,0.25);
+            transform: scale(1.05);
+        }
+
+        .day:focus:not(.empty):not(.disabled) {
+            outline: 2px solid rgba(255,255,255,0.6);
+            outline-offset: 2px;
+        }
+
+        .day.empty {
+            background: none;
+            cursor: default;
+        }
+
+        .day.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .day.today {
+            background: white;
+            color: #1976d2;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .day.selected {
+            background: white;
+            color: #1976d2;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .day.has-slots {
+            position: relative;
+        }
+
+        .day.has-slots::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: #1976d2;
+            border-radius: 50%;
+        }
+
+        .day.all-booked {
+            opacity: 0.6;
+        }
+
+        .day.no-slots {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .slots-section {
+            flex: 1;
+            padding: 40px;
+            background: white;
+        }
+
+        .slots-header {
+            margin-bottom: 25px;
+        }
+
+        .duration-info {
+            display: inline-flex;
+            align-items: center;
+            background: #f5f8fa;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .duration-info svg {
+            margin-right: 6px;
+        }
+
+        .best-time {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .selected-date {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .timezone {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: #e8f4fd;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #0066cc;
+        }
+
+        .timezone-dropdown {
+            background: none;
+            border: none;
+            color: #0066cc;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .slots-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .slots-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .slots-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .slots-list::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+
+        .time-slot {
+            padding: 14px 16px;
+            border: 2px solid #e5e5e5;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .time-slot:hover {
+            border-color: #1976d2;
+            background: #e3f2fd;
+        }
+
+        .time-slot.selected {
+            border-color: #1976d2;
+            background: #1976d2;
+            color: white;
+        }
+
+        .action-buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #1976d2;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1565c0;
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5e5;
+        }
+
+        .btn:focus {
+            outline: 2px solid rgba(25,118,210,0.5);
+            outline-offset: 2px;
+        }
+
+        .time-slot:focus {
+            outline: 2px solid #1976d2;
+            outline-offset: 2px;
+        }
+
+        /* Loading state */
+        .btn-primary.loading {
+            position: relative;
+            color: transparent;
+            pointer-events: none;
+        }
+
+        .btn-primary.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Success message */
+        .success-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f0f9f0;
+            border: 1px solid #c8e6c9;
+            color: #2e7d32;
+            padding: 12px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 9999;
+            font-size: 14px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* Improved calendar section */
+        .calendar-section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calendar-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+
+            .progress-bar {
+                padding: 20px;
+            }
+
+            .step-label {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="content">
+            <div class="calendar-section">
+                <div class="meeting-title">Spotkanie w sprawie odbioru<br>październik 2025</div>
+                
+                <div class="calendar-nav">
+                    <button class="nav-arrow" onclick="changeMonth(-1)" aria-label="Poprzedni miesiąc">‹</button>
+                    <span class="current-month" id="currentMonth">październik 2025</span>
+                    <button class="nav-arrow" onclick="changeMonth(1)" aria-label="Następny miesiąc">›</button>
+                </div>
+
+                <div class="calendar">
+                    <div class="weekdays">
+                        <div>PON</div>
+                        <div>WT</div>
+                        <div>ŚR</div>
+                        <div>CZW</div>
+                        <div>PT</div>
+                        <div>SOB</div>
+                        <div>NDZ</div>
+                    </div>
+                    <div class="days" id="calendarDays"></div>
+                </div>
+            </div>
+
+            <div class="slots-section">
+                <div class="slots-header">
+                    <div class="duration-info">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 0a8 8 0 100 16A8 8 0 008 0zm0 14.5A6.5 6.5 0 118 1.5a6.5 6.5 0 010 13zM8 3.5a.75.75 0 01.75.75v3.69l2.28 2.28a.75.75 0 11-1.06 1.06L7.47 8.78A.75.75 0 017.25 8V4.25A.75.75 0 018 3.5z"/>
+                        </svg>
+                        1 godzina
+                    </div>
+                    <div class="best-time">Jaki termin jest najlepszy?</div>
+                    <div class="selected-date">Pokazuje czasy dla <strong>17 października 2025</strong></div>
+                </div>
+
+                <div class="slots-list" id="slotsList" role="listbox" aria-label="Dostępne terminy">
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">📅</div>
+                        <p>Wybierz datę w kalendarzu, aby zobaczyć dostępne terminy</p>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="goBack()" aria-label="Wstecz do poprzedniego kroku">Wstecz</button>
+                    <button class="btn btn-primary" id="nextBtn" disabled onclick="nextStep()" aria-label="Przejdź do następnego kroku">Dalej</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="success-message" id="successMessage" role="alert" aria-live="polite"></div>
+
+    <script>
+        // ========== CONSTANTS ==========
+        const MONTHS = [
+            'styczeń', 'luty', 'marzec', 'kwiecień', 'maj', 'czerwiec',
+            'lipiec', 'sierpień', 'wrzesień', 'październik', 'listopad', 'grudzień'
+        ];
+
+        // ========== URL PARAMETER HANDLING ==========
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentScheduleId = urlParams.get('schedule');
+
+        /**
+         * Get schedule by ID
+         */
+        function getScheduleById(scheduleId) {
+            const schedules = getAllSchedules();
+            return schedules.find(s => s.id === scheduleId || s.hash === scheduleId);
+        }
+
+        // ========== UTILITY FUNCTIONS ==========
+        
+        /**
+         * Show success message
+         */
+        function showSuccessMessage(message) {
+            const msg = document.getElementById('successMessage');
+            msg.textContent = message;
+            msg.classList.add('show');
+            
+            setTimeout(() => {
+                msg.classList.remove('show');
+            }, 3000);
+        }
+
+        /**
+         * Sanitize input to prevent XSS
+         */
+        function sanitizeInput(str) {
+            if (typeof str !== 'string') return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        /**
+         * Handle keyboard navigation for time slots
+         */
+        function handleSlotKeydown(event, element) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                selectSlot(element);
+            }
+        }
+
+        // ========== CALENDAR FUNCTIONS ==========
+        
+        let currentDate = new Date(2025, 9, 1); // October 2025 (month is 0-indexed)
+
+        /**
+         * Generate calendar for current month
+         */
+        function generateCalendar() {
+            const daysContainer = document.getElementById('calendarDays');
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const today = new Date();
+            const currentDay = today.getDate();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            
+            // Update month display
+            document.getElementById('currentMonth').textContent = 
+                `${MONTHS[month]} ${year}`;
+
+            daysContainer.innerHTML = '';
+            
+            // Add empty cells for days before month starts
+            const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1; // Monday = 0
+            for (let i = 0; i < adjustedFirstDay; i++) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'day empty';
+                daysContainer.appendChild(emptyDiv);
+            }
+            
+            // Add days of month
+            for (let day = 1; day <= daysInMonth; day++) {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.className = 'day';
+                dayDiv.textContent = day;
+                dayDiv.setAttribute('role', 'button');
+                dayDiv.setAttribute('tabindex', '0');
+                dayDiv.setAttribute('aria-label', `${day} ${MONTHS[month]} ${year}`);
+                
+                const date = new Date(year, month, day);
+                const isPast = date < today && 
+                    (date.getDate() !== currentDay || 
+                     date.getMonth() !== currentMonth || 
+                     date.getFullYear() !== currentYear);
+                const isToday = date.getDate() === currentDay && 
+                    date.getMonth() === currentMonth && 
+                    date.getFullYear() === currentYear;
+                
+                // Check if this date has available schedules
+                const schedules = getSchedulesForDate(date);
+                const hasAvailableSlots = schedules.length > 0 && schedules.some(schedule => {
+                    const slots = generateTimeSlotsFromSchedule(schedule, date);
+                    return slots.length > 0;
+                });
+                
+                if (isPast) {
+                    dayDiv.classList.add('disabled');
+                } else {
+                    // Mark days with available slots
+                    if (hasAvailableSlots) {
+                        dayDiv.classList.add('has-slots');
+                        dayDiv.setAttribute('title', 'Dostępne terminy');
+                    } else if (schedules.length > 0) {
+                        // Has schedules but all slots are booked
+                        dayDiv.classList.add('all-booked');
+                        dayDiv.setAttribute('title', 'Wszystkie terminy zarezerwowane');
+                    } else {
+                        // No schedules for this day
+                        dayDiv.classList.add('no-slots');
+                        dayDiv.setAttribute('title', 'Brak dostępnych terminów');
+                    }
+                    
+                    if (isToday) {
+                        dayDiv.classList.add('today', 'selected');
+                        // Update slots for today on load
+                        setTimeout(() => updateTimeSlots(day, month, year), 100);
+                    }
+                    
+                    dayDiv.onclick = () => selectDay(dayDiv, day);
+                    dayDiv.onkeydown = (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            selectDay(dayDiv, day);
+                        }
+                    };
+                }
+                
+                    daysContainer.appendChild(dayDiv);
+            }
+        }
+
+        /**
+         * Select a day in calendar
+         */
+        function selectDay(element, day) {
+            // Don't allow selection of disabled or no-slots days
+            if (element.classList.contains('disabled') || element.classList.contains('no-slots')) {
+                return;
+            }
+            
+            document.querySelectorAll('.day.selected').forEach(el => {
+                el.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const dateText = document.querySelector('.selected-date strong');
+            dateText.textContent = `${day} ${MONTHS[month]} ${year}`;
+            
+            // Update available time slots from schedules
+            updateTimeSlots(day, month, year);
+        }
+
+        /**
+         * Select a time slot
+         */
+        function selectSlot(element) {
+            document.querySelectorAll('.time-slot.selected').forEach(el => {
+                el.classList.remove('selected');
+                el.setAttribute('aria-selected', 'false');
+            });
+            element.classList.add('selected');
+            element.setAttribute('aria-selected', 'true');
+            
+            // Focus management
+            element.focus();
+            
+            // Activate "Dalej" button
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.disabled = false;
+            nextBtn.focus();
+        }
+
+        /**
+         * Get all schedules from localStorage
+         */
+        function getAllSchedules() {
+            try {
+                return JSON.parse(localStorage.getItem('schedules') || '[]');
+            } catch (error) {
+                console.error('Błąd odczytu harmonogramów:', error);
+                return [];
+            }
+        }
+
+        /**
+         * Get schedules for a specific date
+         */
+        function getSchedulesForDate(date) {
+            let schedules = getAllSchedules();
+            const dateStr = date.toISOString().split('T')[0];
+
+            // If schedule ID is provided in URL, filter only that schedule
+            if (currentScheduleId) {
+                schedules = schedules.filter(s => s.id === currentScheduleId || s.hash === currentScheduleId);
+            }
+
+            return schedules.filter(schedule => {
+                return schedule.timeSlots.some(slot => slot.date === dateStr);
+            });
+        }
+
+        /**
+         * Get bookings for a specific date and schedule
+         */
+        function getBookingsForDateAndSchedule(date, scheduleId) {
+            try {
+                const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                const dateStr = date.toISOString().split('T')[0];
+                
+                return bookings.filter(booking => {
+                    return booking.date === dateStr && booking.scheduleId === scheduleId;
+                });
+            } catch (error) {
+                console.error('Błąd odczytu rezerwacji:', error);
+                return [];
+            }
+        }
+
+        /**
+         * Convert time string (HH:MM) to minutes from midnight
+         */
+        function timeToMinutes(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+
+        /**
+         * Convert minutes from midnight to time string (HH:MM)
+         */
+        function minutesToTime(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+        }
+
+        /**
+         * Generate time slots from schedule
+         */
+        function generateTimeSlotsFromSchedule(schedule, date) {
+            const slots = [];
+            const dateStr = date.toISOString().split('T')[0];
+            
+            // Find time slot for this date
+            const timeSlot = schedule.timeSlots.find(slot => slot.date === dateStr);
+            if (!timeSlot) return [];
+            
+            const duration = parseInt(schedule.duration) || 60;
+            const startMinutes = timeToMinutes(timeSlot.timeFrom);
+            const endMinutes = timeToMinutes(timeSlot.timeTo);
+            
+            // Get existing bookings for this schedule and date
+            const bookings = getBookingsForDateAndSchedule(date, schedule.id);
+            const bookedTimes = bookings.map(b => timeToMinutes(b.time));
+            
+            // Generate slots based on duration
+            let currentMinutes = startMinutes;
+            while (currentMinutes + duration <= endMinutes) {
+                const timeStr = minutesToTime(currentMinutes);
+                
+                // Check if this slot is already booked
+                const isBooked = bookedTimes.some(bookedTime => {
+                    // Check if booked time overlaps with this slot
+                    return bookedTime >= currentMinutes && bookedTime < currentMinutes + duration;
+                });
+                
+                // Check if slot is in the past
+                const now = new Date();
+                const slotDateTime = new Date(date);
+                slotDateTime.setHours(Math.floor(currentMinutes / 60), currentMinutes % 60, 0, 0);
+                const isPast = slotDateTime < now;
+                
+                if (!isBooked && !isPast) {
+                    slots.push({
+                        time: timeStr,
+                        scheduleId: schedule.id,
+                        scheduleTitle: schedule.title,
+                        duration: duration,
+                        available: true
+                    });
+                }
+                
+                currentMinutes += duration;
+            }
+            
+            return slots;
+        }
+
+        /**
+         * Update available time slots for selected date
+         */
+        function updateTimeSlots(day, month, year) {
+            const slotsList = document.getElementById('slotsList');
+            const date = new Date(year, month, day);
+            const dateStr = date.toISOString().split('T')[0];
+            
+            // Get schedules for this date
+            const schedules = getSchedulesForDate(date);
+            
+            // Clear existing slots
+            slotsList.innerHTML = '';
+            
+            if (schedules.length === 0) {
+                slotsList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">📅</div>
+                        <p>Brak dostępnych terminów w tym dniu</p>
+                        <p style="font-size: 13px; margin-top: 10px;">Utwórz harmonogram, aby dodać dostępne terminy</p>
+                    </div>
+                `;
+                document.getElementById('nextBtn').disabled = true;
+                return;
+            }
+            
+            // Collect all time slots from all schedules
+            let allSlots = [];
+            schedules.forEach(schedule => {
+                const scheduleSlots = generateTimeSlotsFromSchedule(schedule, date);
+                allSlots = allSlots.concat(scheduleSlots);
+            });
+            
+            // Sort slots by time
+            allSlots.sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
+            
+            // Remove duplicates (same time from different schedules)
+            const uniqueSlots = [];
+            const seenTimes = new Set();
+            allSlots.forEach(slot => {
+                if (!seenTimes.has(slot.time)) {
+                    seenTimes.add(slot.time);
+                    uniqueSlots.push(slot);
+                }
+            });
+            
+            if (uniqueSlots.length === 0) {
+                slotsList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">⏰</div>
+                        <p>Wszystkie terminy w tym dniu są już zarezerwowane</p>
+                    </div>
+                `;
+                document.getElementById('nextBtn').disabled = true;
+                return;
+            }
+            
+            // Create slot elements
+            uniqueSlots.forEach(slot => {
+                const slotDiv = document.createElement('div');
+                slotDiv.className = 'time-slot';
+                slotDiv.setAttribute('role', 'option');
+                slotDiv.setAttribute('tabindex', '0');
+                slotDiv.setAttribute('aria-label', `Wybierz termin ${slot.time}`);
+                slotDiv.setAttribute('data-time', slot.time);
+                slotDiv.setAttribute('data-schedule-id', slot.scheduleId);
+                slotDiv.textContent = slot.time;
+                slotDiv.onclick = () => selectSlot(slotDiv);
+                slotDiv.onkeydown = (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        selectSlot(slotDiv);
+                    }
+                };
+                slotsList.appendChild(slotDiv);
+            });
+            
+            // Disable next button until slot is selected
+            document.getElementById('nextBtn').disabled = true;
+        }
+
+        /**
+         * Change month
+         */
+        function changeMonth(direction) {
+            currentDate.setMonth(currentDate.getMonth() + direction);
+            generateCalendar();
+            showSuccessMessage(`Zmieniono na ${MONTHS[currentDate.getMonth()]} ${currentDate.getFullYear()}`);
+        }
+
+        /**
+         * Go back to previous step
+         */
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                showSuccessMessage('Powrót do poprzedniego kroku...');
+            }
+        }
+
+        /**
+         * Save booking to localStorage
+         */
+        function saveBooking(bookingData) {
+            try {
+                // Get existing bookings
+                const existingBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                
+                // Add new booking with unique ID
+                const newBooking = {
+                    id: Date.now().toString(),
+                    ...bookingData,
+                    createdAt: new Date().toISOString()
+                };
+                
+                existingBookings.push(newBooking);
+                
+                // Save back to localStorage
+                localStorage.setItem('bookings', JSON.stringify(existingBookings));
+                
+                return true;
+            } catch (error) {
+                console.error('Błąd zapisu rezerwacji:', error);
+                return false;
+            }
+        }
+
+        /**
+         * Check if slot is still available
+         */
+        function isSlotAvailable(date, time, scheduleId) {
+            const bookings = getBookingsForDateAndSchedule(date, scheduleId);
+            const timeMinutes = timeToMinutes(time);
+            
+            return !bookings.some(booking => {
+                const bookingMinutes = timeToMinutes(booking.time);
+                // Check if times match (same slot)
+                return bookingMinutes === timeMinutes;
+            });
+        }
+
+        /**
+         * Proceed to next step
+         */
+        function nextStep() {
+            const selectedSlot = document.querySelector('.time-slot.selected');
+            const selectedDay = document.querySelector('.day.selected');
+            
+            if (!selectedSlot || !selectedDay) {
+                showSuccessMessage('Proszę wybrać termin');
+                return;
+            }
+            
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.classList.add('loading');
+            nextBtn.disabled = true;
+            
+            // Get selected data
+            const time = selectedSlot.getAttribute('data-time') || selectedSlot.textContent.trim();
+            const scheduleId = selectedSlot.getAttribute('data-schedule-id');
+            const day = parseInt(selectedDay.textContent.trim());
+            const month = currentDate.getMonth();
+            const year = currentDate.getFullYear();
+            
+            // Create date object
+            const bookingDate = new Date(year, month, day);
+            const dateStr = bookingDate.toISOString().split('T')[0];
+            const dateString = bookingDate.toLocaleDateString('pl-PL', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            // Check if slot is still available
+            if (!isSlotAvailable(bookingDate, time, scheduleId)) {
+                showSuccessMessage('❌ Ten termin został już zarezerwowany. Wybierz inny.');
+                nextBtn.classList.remove('loading');
+                nextBtn.disabled = false;
+                // Refresh slots
+                updateTimeSlots(day, month, year);
+                return;
+            }
+            
+            // Prepare booking data
+            const bookingData = {
+                scheduleId: scheduleId,
+                date: dateStr,
+                dateString: dateString,
+                day: day,
+                month: month + 1, // 1-12
+                year: year,
+                time: time,
+                fullDate: bookingDate.toISOString(),
+                displayDate: `${day} ${MONTHS[month]} ${year}`
+            };
+            
+            // Save booking
+            setTimeout(() => {
+                const saved = saveBooking(bookingData);
+                
+                if (saved) {
+                    showSuccessMessage(`✅ Rezerwacja zapisana: ${dateString} o ${time}`);
+                    
+                    // Reset selection
+                    selectedSlot.classList.remove('selected');
+                    selectedSlot.setAttribute('aria-selected', 'false');
+                    selectedDay.classList.remove('selected');
+                    document.getElementById('nextBtn').disabled = true;
+                    
+                    // Refresh slots to remove booked one
+                    updateTimeSlots(day, month, year);
+                    
+                    // Optionally redirect to home page
+                    setTimeout(() => {
+                        if (confirm('Rezerwacja została zapisana! Czy chcesz wrócić do strony głównej?')) {
+                            window.location.href = 'index.html';
+                        }
+                    }, 500);
+                } else {
+                    showSuccessMessage('❌ Błąd podczas zapisywania rezerwacji');
+                }
+                
+                nextBtn.classList.remove('loading');
+                nextBtn.disabled = false;
+            }, 1000);
+        }
+
+        // ========== INITIALIZATION ==========
+
+        // Update title if schedule ID is provided in URL
+        if (currentScheduleId) {
+            const schedule = getScheduleById(currentScheduleId);
+            if (schedule) {
+                document.querySelector('.meeting-title').textContent = schedule.title || 'Rezerwacja spotkania';
+
+                // Update duration info
+                const durationInfo = document.querySelector('.duration-info');
+                if (durationInfo && schedule.duration) {
+                    const durationText = schedule.duration >= 60
+                        ? `${schedule.duration / 60} ${schedule.duration === 60 ? 'godzina' : 'godziny'}`
+                        : `${schedule.duration} minut`;
+                    durationInfo.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 0a8 8 0 100 16A8 8 0 008 0zm0 14.5A6.5 6.5 0 118 1.5a6.5 6.5 0 010 13zM8 3.5a.75.75 0 01.75.75v3.69l2.28 2.28a.75.75 0 11-1.06 1.06L7.47 8.78A.75.75 0 017.25 8V4.25A.75.75 0 018 3.5z"/>
+                        </svg>
+                        ${durationText}
+                    `;
+                }
+
+                // Set current date to first available date in schedule
+                if (schedule.timeSlots && schedule.timeSlots.length > 0) {
+                    const firstDate = new Date(schedule.timeSlots[0].date);
+                    currentDate = new Date(firstDate.getFullYear(), firstDate.getMonth(), 1);
+                }
+            } else {
+                // Schedule not found
+                document.querySelector('.meeting-title').textContent = 'Harmonogram nie znaleziony';
+                document.querySelector('.slots-section').innerHTML = `
+                    <div style="text-align: center; padding: 60px; color: #999;">
+                        <div style="font-size: 64px; margin-bottom: 20px;">🔍</div>
+                        <h3 style="color: #333; margin-bottom: 10px;">Harmonogram nie został znaleziony</h3>
+                        <p>Link może być nieprawidłowy lub harmonogram został usunięty.</p>
+                        <a href="index.html" style="display: inline-block; margin-top: 20px; padding: 12px 24px; background: #7cb342; color: white; text-decoration: none; border-radius: 6px;">Wróć do strony głównej</a>
+                    </div>
+                `;
+            }
+        }
+
+        generateCalendar();
+
+        // Set initial focus
+        document.querySelector('.day.selected')?.focus();
+    </script>
+</body>
+</html>
