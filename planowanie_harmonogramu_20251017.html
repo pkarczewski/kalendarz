@@ -59,6 +59,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            text-decoration: none;
         }
         
         .close-btn:hover {
@@ -387,6 +388,27 @@
             background: #4caf50;
         }
 
+        .result-actions {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #d4e7ff;
+        }
+
+        .btn-back {
+            display: inline-block;
+            background: #2196F3;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .btn-back:hover {
+            background: #1976D2;
+        }
+
         /* Temporary message (replaces alert()) */
         .temp-message {
             position: fixed;
@@ -564,7 +586,7 @@
     <div class="container">
         <div class="header">
             <h1>Utwórz harmonogram</h1>
-            <button class="close-btn" onclick="window.close()" aria-label="Zamknij okno">×</button>
+            <a href="index.html" class="close-btn" aria-label="Wróć do strony głównej">×</a>
         </div>
 
         <form id="scheduleForm">
@@ -675,6 +697,9 @@
             <div class="link-display" id="generatedLink">
                 <div class="link-display-text"></div>
                 <button class="btn-copy" id="copyLinkBtn" aria-label="Kopiuj link">Kopiuj</button>
+            </div>
+            <div class="result-actions">
+                <a href="index.html" class="btn btn-back">← Wróć do strony głównej</a>
             </div>
         </div>
     </div>
