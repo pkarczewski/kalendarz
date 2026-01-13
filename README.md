@@ -65,9 +65,40 @@ kalendarz/
     └── launch.json                     # Konfiguracja VS Code
 ```
 
+## 📊 Dependency Analysis
+
+This project has been analyzed for dependencies, security vulnerabilities, and potential improvements:
+
+- **[DEPENDENCY_ANALYSIS.md](./DEPENDENCY_ANALYSIS.md)** - Comprehensive analysis report with recommendations
+- **[QUICK_START_GUIDE.md](./QUICK_START_GUIDE.md)** - Step-by-step guide to implement recommended improvements
+
+### Key Findings
+
+✅ **Strengths:**
+- Zero external dependencies (no security vulnerabilities)
+- Lightweight and fast
+- No build process required
+
+⚠️ **Limitations:**
+- localStorage not suitable for production (data loss risk)
+- No backend/database integration
+- No authentication/authorization
+- Limited to modern browsers only
+
+### Recommended Next Steps
+
+1. Install dependencies: `npm install`
+2. Choose a backend (Firebase or Supabase recommended)
+3. Migrate from localStorage to database
+4. Add authentication
+5. Deploy to production
+
+See **[QUICK_START_GUIDE.md](./QUICK_START_GUIDE.md)** for detailed instructions.
+
 ## Uwagi
 
 - Wszystkie pliki są samodzielne (self-contained)
 - Nie wymagają połączenia z internetem
 - Gotowe do użycia lokalnie lub na serwerze
+- **Uwaga:** Obecna wersja używa localStorage - nie zalecane dla produkcji
 
