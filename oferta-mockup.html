@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ursynów Cynamonowa - Magiczny Zakątek</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #7cb342;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .contact-info {
+            text-align: right;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .contact-info strong {
+            display: block;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .hero {
+            height: 400px;
+            background: linear-gradient(135deg, #7cb342 0%, #558b2f 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: 600;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '🏢';
+            position: absolute;
+            font-size: 200px;
+            opacity: 0.1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 30px;
+        }
+
+        .main-content {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 24px;
+            color: #7cb342;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #7cb342;
+        }
+
+        .section h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* Apartment Cards */
+        .apartments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .apartment-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: box-shadow 0.3s;
+        }
+
+        .apartment-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .apartment-plan {
+            background: #f9f9f9;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .apartment-info {
+            padding: 15px;
+        }
+
+        .apartment-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .apartment-details {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .apartment-details div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .btn-reserve {
+            background: #7cb342;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-reserve:hover {
+            background: #689f38;
+        }
+
+        /* Sidebar Widgets */
+        .widget {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .widget h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Process Steps */
+        .steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .step-icon {
+            width: 30px;
+            height: 30px;
+            background: #e8f5e9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7cb342;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-size: 14px;
+            color: #666;
+            padding-top: 4px;
+        }
+
+        /* Agent Card */
+        .agent-card {
+            text-align: center;
+        }
+
+        .agent-photo {
+            width: 80px;
+            height: 80px;
+            background: #e0e0e0;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .agent-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .btn-call {
+            background: #7cb342;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .agent-email {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Office Info */
+        .office-hours {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .office-hours strong {
+            display: block;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        /* Contact Form - MAIN SECTION */
+        .contact-form-widget {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .contact-form-widget h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .rating-section {
+            margin-bottom: 20px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 5px;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .star {
+            color: #ffc107;
+            cursor: pointer;
+        }
+
+        .star.empty {
+            color: #e0e0e0;
+        }
+
+        .rating-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        textarea.form-control {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 10px;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .btn-submit {
+            background: #7cb342;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+
+        .btn-submit:hover {
+            background: #689f38;
+        }
+
+        /* APPOINTMENT BUTTON - NEW */
+        .appointment-section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            border: 2px dashed #7cb342;
+        }
+
+        .appointment-section h4 {
+            font-size: 15px;
+            margin-bottom: 10px;
+            color: #333;
+            text-align: center;
+        }
+
+        .btn-appointment {
+            background: linear-gradient(135deg, #7cb342 0%, #689f38 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(124, 179, 66, 0.3);
+        }
+
+        .btn-appointment:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(124, 179, 66, 0.4);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            color: #999;
+            font-size: 13px;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        /* Amenities */
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .amenity-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .amenity-icon {
+            width: 30px;
+            height: 30px;
+            background: #e8f5e9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7cb342;
+        }
+
+        /* Attachments */
+        .attachments {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .attachment-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #e8f5e9;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .attachment-link:hover {
+            background: #c8e6c9;
+        }
+
+        .attachment-icon {
+            color: #7cb342;
+            font-size: 18px;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .apartments-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                height: 250px;
+                font-size: 24px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .apartments-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">🏠</div>
+            <div>
+                <strong>MAGICZNY ZAKĄTEK</strong>
+                <div style="font-size: 12px; color: #666;">Ursynów Cynamonowa</div>
+            </div>
+        </div>
+        <div class="contact-info">
+            Data wygaśnięcia oferty:<br>
+            <strong>do: 08.2025</strong>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div>
+            Ursynów Cynamonowa<br>
+            <div style="font-size: 18px; margin-top: 10px; font-weight: 400;">Twoje miejsce w magicznym zakątku</div>
+        </div>
+    </section>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Description -->
+            <section class="section">
+                <h2>Dobre dobry...</h2>
+                <p class="description">
+                    Dziękujemy za zainteresowanie naszą inwestycją <strong>Magiczny Zakątek</strong>.
+                </p>
+                <p class="description">
+                    Jesteśmy przekonani, że wykwalifikowany i serdecznie wymagające miejsce do życia z radością it odpowiemy na wszystkie pytania!
+                </p>
+            </section>
+
+            <!-- Oferowane lokale -->
+            <section class="section">
+                <h2>Oferowane lokale</h2>
+                <div class="apartments-grid">
+                    <!-- Apartment A1 -->
+                    <div class="apartment-card">
+                        <div class="apartment-plan">📐</div>
+                        <div class="apartment-info">
+                            <div class="apartment-title">Ursynów Cynamonowa A1</div>
+                            <div class="apartment-details">
+                                <div><span>64,40 m²</span><span>4 pokoje</span></div>
+                                <div><span>1 106 000,12 zł</span></div>
+                                <div><span>17 173,91 zł/m²</span></div>
+                                <div style="margin-top: 10px; color: #7cb342; font-weight: 600;">
+                                    <div>Powierzchnia: Ogród</div>
+                                    <div>Balkon: 12,40 m²</div>
+                                </div>
+                            </div>
+                            <button class="btn-reserve">Zarezerwuj</button>
+                            <div style="text-align: center; margin-top: 10px; font-size: 12px; color: #666;">
+                                Wszystkie wpięte →
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Apartment A7 -->
+                    <div class="apartment-card">
+                        <div class="apartment-plan">📐</div>
+                        <div class="apartment-info">
+                            <div class="apartment-title">Ursynów Cynamonowa A7</div>
+                            <div class="apartment-details">
+                                <div><span>66,30 m²</span><span>2 pokoje</span></div>
+                                <div><span>1 271 660,13 zł</span></div>
+                                <div><span>19 185,23 zł/m²</span></div>
+                                <div style="margin-top: 10px; color: #7cb342; font-weight: 600;">
+                                    <div>Powierzchnia: Balkon</div>
+                                    <div>Balkon: 9,42 m²</div>
+                                </div>
+                            </div>
+                            <button class="btn-reserve">Zarezerwuj</button>
+                            <div style="text-align: center; margin-top: 10px; font-size: 12px; color: #666;">
+                                Wszystkie wpięte →
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Apartment A9 -->
+                    <div class="apartment-card">
+                        <div class="apartment-plan">📐</div>
+                        <div class="apartment-info">
+                            <div class="apartment-title">Ursynów Cynamonowa A9</div>
+                            <div class="apartment-details">
+                                <div><span>77,40 m²</span><span>3 pokoje</span></div>
+                                <div><span>1 127 350,13 zł</span></div>
+                                <div><span>19 680,23 zł/m²</span></div>
+                                <div style="margin-top: 10px; color: #7cb342; font-weight: 600;">
+                                    <div>Powierzchnia: Balkon</div>
+                                    <div>Balkon: 8,39 m²</div>
+                                </div>
+                            </div>
+                            <button class="btn-reserve">Zarezerwuj</button>
+                            <div style="text-align: center; margin-top: 10px; font-size: 12px; color: #666;">
+                                Wszystkie wpięte →
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Magiczny Zakątek -->
+            <section class="section">
+                <h2>Magiczny Zakątek 🌿</h2>
+                <h3>Twoje miejsce pełne harmonii i spokoju</h3>
+                <p class="description">
+                    <strong>Magiczny Zakątek</strong> to wyjątkowa inwestycja mieszkaniowa położona w otoczeniu zieleni, zapewniająca mieszkańcom spokój i ciszę. To przestrzeń, w której komfort spotyka się z naturą, a spokojne otoczenie zapewnia idealne miejsce do życia i odpoczynku.
+                </p>
+                <p class="description">
+                    Oprócz <strong>atrakcji spokoju, zielonych terenów i podaży</strong> – czarów lokalnie okolą, strefy rekreacyjne miejsce do spotkań sąsiedzkich, nowoczesne tereny podmiejskie miejsca do zabaw dla dzieci. Wszystko to sprawiła, że Magiczny Zakątek to miejsce, w którym każdy znajdzie coś dla siebie!
+                </p>
+            </section>
+
+            <!-- Udogodnienia -->
+            <section class="section">
+                <h2>Udogodnienia</h2>
+                <div class="amenities-grid">
+                    <div class="amenity-item">
+                        <div class="amenity-icon">🏠</div>
+                        <div>Domy jednorodzinne</div>
+                    </div>
+                    <div class="amenity-item">
+                        <div class="amenity-icon">🌳</div>
+                        <div>Środki zieleni miejskiej</div>
+                    </div>
+                    <div class="amenity-item">
+                        <div class="amenity-icon">🚗</div>
+                        <div>Obity klub pogody na motocycle</div>
+                    </div>
+                    <div class="amenity-item">
+                        <div class="amenity-icon">🏢</div>
+                        <div>Przestrzennie budynku</div>
+                    </div>
+                    <div class="amenity-item">
+                        <div class="amenity-icon">🎨</div>
+                        <div>Design in zgodzie z naturą</div>
+                    </div>
+                    <div class="amenity-item">
+                        <div class="amenity-icon">🌿</div>
+                        <div>Kwietne zabudowanie</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Załączniki -->
+            <section class="section">
+                <h2>Załączniki</h2>
+                <div class="attachments">
+                    <a href="#" class="attachment-link">
+                        <span class="attachment-icon">📄</span>
+                        <span>Karta - Zaprojektowania: Nazwa.pdf</span>
+                    </a>
+                    <a href="#" class="attachment-link">
+                        <span class="attachment-icon">📄</span>
+                        <span>Prezentacja: Informacyjna.pdf</span>
+                    </a>
+                    <a href="#" class="attachment-link">
+                        <span class="attachment-icon">🖼️</span>
+                        <span>Galeria: Na pobranie oraz innych.zip</span>
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Process Steps -->
+            <div class="widget">
+                <h3>Opiekun klienta</h3>
+                <div class="steps-list">
+                    <div class="step-item">
+                        <div class="step-icon">✓</div>
+                        <div class="step-text">Obsłudze lokali i jak dogodnym dostępem do miasta</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon">✓</div>
+                        <div class="step-text">Kolejne ogródki własności: także udziałowej na common areas</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon">✓</div>
+                        <div class="step-text">Rezerwacja wybranego lokalu poprzedza Urząd zapisem</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon">✓</div>
+                        <div class="step-text">Otrzymanie wybranego podgotowania - wizyta podana sprawę lokalną</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon">✓</div>
+                        <div class="step-text">Zastosowanie nowoczesnych technologii budowalnych</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agent Info -->
+            <div class="widget agent-card">
+                <h3>Opiekun klienta</h3>
+                <div class="agent-photo">👤</div>
+                <div class="agent-name">Wioleta Garbarczyk</div>
+                <button class="btn-call">📞 535 213 213</button>
+                <div class="agent-email">wgarbarczyk@voxdeveloper.com</div>
+            </div>
+
+            <!-- Office Hours -->
+            <div class="widget">
+                <h3>Biuro sprzedaży</h3>
+                <div class="office-hours">
+                    <strong>Pon - Pt</strong>
+                    9:00-17:00
+                    <strong>Sob</strong>
+                    10:00-14:00
+                    <strong>Niedziela</strong>
+                    Nieczynne
+                    <strong>Warszawa</strong>
+                    Ursynów, ul. Cynamonowa 17/2
+                </div>
+            </div>
+
+            <!-- CONTACT FORM WITH APPOINTMENT BUTTON -->
+            <div class="contact-form-widget">
+                <h3>Umów spotkanie, oceń ofertę</h3>
+
+                <!-- APPOINTMENT SECTION - NEW! -->
+                <div class="appointment-section">
+                    <h4>📅 Umów się na spotkanie</h4>
+                    <button class="btn-appointment" onclick="window.location.href='wybor_terminu_20251017.html'">
+                        🗓️ Wybierz termin spotkania
+                    </button>
+                </div>
+
+                <div class="divider">lub</div>
+
+                <!-- Rating -->
+                <div class="rating-section">
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star empty">★</span>
+                    </div>
+                    <div class="rating-label">*Adres e-mail</div>
+                </div>
+
+                <!-- Contact Form -->
+                <form>
+                    <div class="form-group">
+                        <input type="email" class="form-control" placeholder="Adres e-mail" required>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="tel" class="form-control" placeholder="Numer telefonu">
+                    </div>
+
+                    <div class="form-group">
+                        <textarea class="form-control" placeholder="Twoja wiadomość"></textarea>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="consent" required>
+                        <label for="consent">
+                            * Administratorem danych osobowych użytkowników jest Voxdeveloper Group Sp. z o.o. sprzedażą. Czytaj więcej
+                            <a href="#" style="color: #7cb342;">Politykę prywatności</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Wyślij</button>
+                </form>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        // Star rating functionality
+        const stars = document.querySelectorAll('.star');
+        let currentRating = 4;
+
+        stars.forEach((star, index) => {
+            star.addEventListener('click', () => {
+                currentRating = index + 1;
+                updateStars();
+            });
+
+            star.addEventListener('mouseenter', () => {
+                highlightStars(index + 1);
+            });
+        });
+
+        document.querySelector('.stars').addEventListener('mouseleave', () => {
+            updateStars();
+        });
+
+        function updateStars() {
+            stars.forEach((star, index) => {
+                if (index < currentRating) {
+                    star.classList.remove('empty');
+                } else {
+                    star.classList.add('empty');
+                }
+            });
+        }
+
+        function highlightStars(count) {
+            stars.forEach((star, index) => {
+                if (index < count) {
+                    star.classList.remove('empty');
+                } else {
+                    star.classList.add('empty');
+                }
+            });
+        }
+
+        // Form submission
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Dziękujemy za kontakt! Odezwiemy się wkrótce.');
+        });
+
+        // Reserve buttons
+        document.querySelectorAll('.btn-reserve').forEach(btn => {
+            btn.addEventListener('click', () => {
+                alert('Rezerwacja lokalu - funkcja w przygotowaniu');
+            });
+        });
+    </script>
+</body>
+</html>
