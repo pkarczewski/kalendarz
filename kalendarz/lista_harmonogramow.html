@@ -1,0 +1,3685 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoxDeveloper CRM - Lista harmonogramow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================
+           CSS VARIABLES - Design System VoxCRM
+        ======================================== */
+        :root {
+            /* Primary Colors */
+            --color-primary: #0066cc;
+            --color-primary-dark: #004d99;
+            --color-primary-light: #3399ff;
+            --color-primary-bg: #e6f2ff;
+
+            /* Semantic Colors */
+            --color-success: #4CAF50;
+            --color-success-dark: #388E3C;
+            --color-success-light: #81C784;
+            --color-success-bg: #E8F5E9;
+
+            --color-warning: #FF9800;
+            --color-warning-dark: #F57C00;
+            --color-warning-light: #FFB74D;
+            --color-warning-bg: #FFF3E0;
+
+            --color-danger: #f44336;
+            --color-danger-dark: #c62828;
+            --color-danger-light: #E57373;
+            --color-danger-bg: #FFEBEE;
+
+            --color-info: #00BCD4;
+            --color-info-dark: #0097A7;
+            --color-info-light: #4DD0E1;
+            --color-info-bg: #E0F7FA;
+
+            /* Neutrals */
+            --color-white: #ffffff;
+            --color-gray-50: #fafafa;
+            --color-gray-100: #f5f5f5;
+            --color-gray-200: #eeeeee;
+            --color-gray-300: #e0e0e0;
+            --color-gray-400: #bdbdbd;
+            --color-gray-500: #9e9e9e;
+            --color-gray-600: #757575;
+            --color-gray-700: #616161;
+            --color-gray-800: #424242;
+            --color-gray-900: #212121;
+
+            /* Text Colors */
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --text-inverse: #ffffff;
+
+            /* Border */
+            --border-color: #e0e0e0;
+            --border-color-light: #f0f0f0;
+
+            /* Typography */
+            --font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-size-xs: 11px;
+            --font-size-sm: 12px;
+            --font-size-md: 13px;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+
+            /* Spacing (8px base) */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+            --spacing-lg: 16px;
+            --spacing-xl: 20px;
+            --spacing-2xl: 24px;
+            --spacing-3xl: 32px;
+
+            /* Border Radius */
+            --radius-sm: 3px;
+            --radius-md: 4px;
+            --radius-lg: 6px;
+            --radius-xl: 8px;
+            --radius-full: 9999px;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.2);
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+
+            /* Z-index */
+            --z-dropdown: 100;
+            --z-modal: 200;
+            --z-toast: 300;
+        }
+
+        /* ========================================
+           RESET & BASE
+        ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            color: var(--text-primary);
+            background: var(--color-gray-100);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        /* ========================================
+           TOP BAR
+        ======================================== */
+        .top-bar {
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary) 0%, #00A0B0 100%);
+        }
+
+        /* ========================================
+           HEADER
+        ======================================== */
+        .main-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--spacing-xl);
+            height: 60px;
+            background: var(--color-white);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3xl);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .logo-icon {
+            flex-shrink: 0;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .logo-main {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: #00A0B0;
+        }
+
+        .logo-developer {
+            color: var(--color-gray-600);
+            font-weight: var(--font-weight-normal);
+        }
+
+        .logo-sub {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+            letter-spacing: 2px;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .nav-item {
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .nav-item:hover {
+            background: var(--color-gray-100);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--color-primary-bg);
+            color: var(--color-primary);
+        }
+
+        .nav-item i {
+            font-size: 10px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--color-gray-100);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .search-box input {
+            border: none;
+            background: none;
+            outline: none;
+            font-size: var(--font-size-sm);
+            width: 150px;
+        }
+
+        .search-box i {
+            color: var(--text-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .user-name {
+            text-align: right;
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        .user-name strong {
+            color: var(--text-primary);
+        }
+
+        .user-avatar-initials {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, #00A0B0 0%, #006070 100%);
+            color: var(--color-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-bold);
+        }
+
+        .header-icons {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: var(--color-gray-100);
+            color: var(--text-primary);
+        }
+
+        .icon-btn .badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: var(--color-danger);
+            color: var(--color-white);
+            font-size: 9px;
+            font-weight: var(--font-weight-bold);
+            padding: 2px 5px;
+            border-radius: var(--radius-full);
+        }
+
+        /* ========================================
+           MAIN CONTENT
+        ======================================== */
+        .main-content {
+            padding: var(--spacing-xl);
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* ========================================
+           PAGE HEADER
+        ======================================== */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .page-title h1 {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+
+        .page-title .subtitle {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+            margin-top: var(--spacing-xs);
+        }
+
+        .page-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        /* ========================================
+           BUTTONS
+        ======================================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            font-size: var(--font-size-md);
+            font-weight: var(--font-weight-medium);
+            border-radius: var(--radius-md);
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-dark);
+        }
+
+        .btn-outline {
+            background: var(--color-white);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--color-gray-50);
+            border-color: var(--color-gray-400);
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            color: var(--color-white);
+        }
+
+        .btn-success:hover {
+            background: var(--color-success-dark);
+        }
+
+        /* ========================================
+           MAIN TABS (Harmonogramy / Spotkania)
+        ======================================== */
+        .main-tabs-container {
+            margin-bottom: var(--spacing-xl);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .main-tabs {
+            display: flex;
+            gap: 0;
+        }
+
+        .main-tab {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            margin-bottom: -1px;
+        }
+
+        .main-tab:hover {
+            color: var(--text-primary);
+            background: var(--color-gray-50);
+        }
+
+        .main-tab.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+            background: transparent;
+        }
+
+        .main-tab i {
+            font-size: var(--font-size-lg);
+        }
+
+        .tab-badge {
+            background: var(--color-gray-200);
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .main-tab.active .tab-badge {
+            background: var(--color-primary-bg);
+            color: var(--color-primary);
+        }
+
+        /* Tab content panels */
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ========================================
+           CALENDAR VIEW (Spotkania)
+        ======================================== */
+        .calendar-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .calendar-filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+            min-width: 180px;
+        }
+
+        .calendar-filter-group label {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-secondary);
+        }
+
+        .calendar-filter-select {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            color: var(--text-primary);
+            background: var(--color-white);
+            cursor: pointer;
+            transition: border-color var(--transition-fast);
+        }
+
+        .calendar-filter-select:hover {
+            border-color: var(--color-gray-400);
+        }
+
+        .calendar-filter-select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+        }
+
+        .calendar-container {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .calendar-nav-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-gray-100);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .calendar-nav-btn:hover {
+            background: var(--color-gray-200);
+            color: var(--text-primary);
+        }
+
+        .calendar-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+
+        .calendar-today-btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--color-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .calendar-today-btn:hover {
+            background: var(--color-gray-50);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+
+        .calendar-day-header {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: center;
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            background: var(--color-gray-50);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .calendar-day {
+            min-height: 100px;
+            padding: var(--spacing-sm);
+            border-right: 1px solid var(--border-color-light);
+            border-bottom: 1px solid var(--border-color-light);
+            background: var(--color-white);
+            transition: background var(--transition-fast);
+        }
+
+        .calendar-day:nth-child(7n) {
+            border-right: none;
+        }
+
+        .calendar-day:hover {
+            background: var(--color-gray-50);
+        }
+
+        .calendar-day.other-month {
+            background: var(--color-gray-50);
+        }
+
+        .calendar-day.other-month .day-number {
+            color: var(--text-muted);
+        }
+
+        .calendar-day.today {
+            background: var(--color-primary-bg);
+        }
+
+        .calendar-day.today .day-number {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .day-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+            border-radius: var(--radius-full);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .calendar-event {
+            padding: 4px 6px;
+            margin-bottom: 3px;
+            border-radius: var(--radius-sm);
+            font-size: 10px;
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .calendar-event:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .calendar-event .event-time {
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .calendar-event .event-client {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .calendar-event .event-schedule {
+            font-size: 9px;
+            opacity: 0.8;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .calendar-event .event-status-badge {
+            display: inline-block;
+            font-size: 9px;
+            font-weight: 600;
+            padding: 1px 4px;
+            border-radius: var(--radius-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 2px;
+        }
+
+        /* Status: Planowane (pending confirmation) */
+        .calendar-event.status-planned {
+            background: var(--color-warning-bg);
+            color: var(--color-warning-dark);
+            border-left: 3px solid var(--color-warning);
+        }
+
+        .calendar-event.status-planned .event-status-badge {
+            background: var(--color-warning);
+            color: #fff;
+        }
+
+        /* Status: Potwierdzone */
+        .calendar-event.status-confirmed {
+            background: var(--color-success-bg);
+            color: var(--color-success-dark);
+            border-left: 3px solid var(--color-success);
+        }
+
+        .calendar-event.status-confirmed .event-status-badge {
+            background: var(--color-success);
+            color: #fff;
+        }
+
+        /* Status: Anulowane */
+        .calendar-event.status-cancelled {
+            background: var(--color-gray-100);
+            color: var(--text-muted);
+            border-left: 3px solid var(--color-gray-400);
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+
+        .calendar-event.status-cancelled .event-status-badge {
+            background: var(--color-gray-500);
+            color: #fff;
+        }
+
+        /* Meeting type indicators (small icon) */
+        .calendar-event .event-type-icon {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 8px;
+            opacity: 0.6;
+        }
+
+        .more-events {
+            padding: 2px 6px;
+            font-size: 10px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .more-events:hover {
+            color: var(--color-primary);
+        }
+
+        /* ========================================
+           MEETING DETAIL MODAL
+        ======================================== */
+        .meeting-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: var(--z-modal);
+            padding: var(--spacing-xl);
+        }
+
+        .meeting-modal-overlay.show {
+            display: flex;
+        }
+
+        .meeting-modal {
+            background: var(--color-white);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 500px;
+            box-shadow: var(--shadow-xl);
+            animation: modalSlideIn 0.3s ease;
+            overflow: hidden;
+        }
+
+        .meeting-modal-header {
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .meeting-modal-header h3 {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .meeting-status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .meeting-status-indicator.planned {
+            background: var(--color-warning-bg);
+            color: var(--color-warning-dark);
+        }
+
+        .meeting-status-indicator.confirmed {
+            background: var(--color-success-bg);
+            color: var(--color-success-dark);
+        }
+
+        .meeting-status-indicator.cancelled {
+            background: var(--color-gray-100);
+            color: var(--text-muted);
+        }
+
+        .meeting-status-indicator i {
+            font-size: 8px;
+        }
+
+        .meeting-modal-body {
+            padding: var(--spacing-xl);
+        }
+
+        .meeting-detail-section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .meeting-detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .meeting-detail-label {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .meeting-detail-value {
+            font-size: var(--font-size-base);
+            color: var(--text-primary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .meeting-detail-value.large {
+            font-size: var(--font-size-lg);
+        }
+
+        .meeting-detail-row {
+            display: flex;
+            gap: var(--spacing-xl);
+        }
+
+        .meeting-detail-row .meeting-detail-section {
+            flex: 1;
+        }
+
+        .meeting-person-card {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--color-gray-50);
+            border-radius: var(--radius-md);
+            margin-top: var(--spacing-xs);
+        }
+
+        .meeting-person-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-white);
+        }
+
+        .meeting-person-avatar.company {
+            background: linear-gradient(135deg, #00A0B0 0%, #006070 100%);
+        }
+
+        .meeting-person-avatar.client {
+            background: linear-gradient(135deg, #7B1FA2 0%, #4A148C 100%);
+        }
+
+        .meeting-person-info {
+            flex: 1;
+        }
+
+        .meeting-person-name {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+        }
+
+        .meeting-person-role {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+        }
+
+        .meeting-person-contact {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            margin-top: 2px;
+        }
+
+        .meeting-person-contact a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .meeting-person-contact a:hover {
+            text-decoration: underline;
+        }
+
+        .meeting-modal-footer {
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-top: 1px solid var(--border-color);
+            background: var(--color-gray-50);
+            display: flex;
+            justify-content: space-between;
+            gap: var(--spacing-sm);
+        }
+
+        .meeting-modal-footer .btn-group {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .btn-danger-outline {
+            background: var(--color-white);
+            color: var(--color-danger);
+            border: 1px solid var(--color-danger-light);
+        }
+
+        .btn-danger-outline:hover {
+            background: var(--color-danger-bg);
+        }
+
+        .btn-success-outline {
+            background: var(--color-white);
+            color: var(--color-success-dark);
+            border: 1px solid var(--color-success-light);
+        }
+
+        .btn-success-outline:hover {
+            background: var(--color-success-bg);
+        }
+
+        /* ========================================
+           FILTERS BAR
+        ======================================== */
+        .filters-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .filters-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .filters-right {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .filter-group label {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .filter-select,
+        .filter-input {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            background: var(--color-white);
+            color: var(--text-primary);
+            min-width: 140px;
+        }
+
+        .filter-select:focus,
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .search-input-wrapper {
+            position: relative;
+        }
+
+        .search-input-wrapper input {
+            padding-left: 32px;
+        }
+
+        .search-input-wrapper i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        /* ========================================
+           TABLE
+        ======================================== */
+        .schedule-table-container {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .schedule-table thead {
+            background: var(--color-gray-50);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .schedule-table th {
+            padding: var(--spacing-md) var(--spacing-lg);
+            text-align: left;
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .schedule-table th.sortable {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .schedule-table th.sortable:hover {
+            background: var(--color-gray-100);
+        }
+
+        .sort-icon {
+            margin-left: var(--spacing-xs);
+            color: var(--text-muted);
+            font-size: 10px;
+        }
+
+        .schedule-table th.asc .sort-icon,
+        .schedule-table th.desc .sort-icon {
+            color: var(--color-primary);
+        }
+
+        .schedule-table tbody tr {
+            border-bottom: 1px solid var(--border-color-light);
+            transition: background var(--transition-fast);
+        }
+
+        .schedule-table tbody tr:hover {
+            background: var(--color-gray-50);
+        }
+
+        .schedule-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .schedule-table td {
+            padding: var(--spacing-md) var(--spacing-lg);
+            vertical-align: middle;
+        }
+
+        /* Row states */
+        .schedule-row.attention {
+            background: linear-gradient(to right, var(--color-warning-bg) 0%, transparent 15%);
+            border-left: 3px solid var(--color-warning);
+        }
+
+        .schedule-row.attention:hover {
+            background: linear-gradient(to right, var(--color-warning-bg) 0%, var(--color-gray-50) 15%);
+        }
+
+        .schedule-row.disabled {
+            opacity: 0.6;
+        }
+
+        /* ========================================
+           CELL: NAME
+        ======================================== */
+        .cell-name {
+            min-width: 200px;
+        }
+
+        .schedule-name-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .schedule-name {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .schedule-type {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+        }
+
+        .attention-indicator {
+            color: var(--color-warning);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ========================================
+           CELL: STATUS BADGE
+        ======================================== */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            border-radius: var(--radius-full);
+            white-space: nowrap;
+        }
+
+        .status-badge i {
+            font-size: 6px;
+        }
+
+        .status-badge.status-active {
+            background: var(--color-success-bg);
+            color: var(--color-success-dark);
+            border: 1px solid var(--color-success-light);
+        }
+
+        .status-badge.status-pending {
+            background: var(--color-warning-bg);
+            color: var(--color-warning-dark);
+            border: 1px solid var(--color-warning-light);
+        }
+
+        .status-badge.status-full {
+            background: var(--color-info-bg);
+            color: var(--color-info-dark);
+            border: 1px solid var(--color-info-light);
+        }
+
+        .status-badge.status-expired {
+            background: var(--color-gray-100);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .status-badge.status-disabled {
+            background: var(--color-danger-bg);
+            color: var(--color-danger-dark);
+            border: 1px solid var(--color-danger-light);
+        }
+
+        /* ========================================
+           CELL: RESERVATIONS (Progress bar)
+        ======================================== */
+        .reservations-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .reservations-progress {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .progress-bar {
+            width: 60px;
+            height: 6px;
+            background: var(--color-gray-200);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--color-success);
+            border-radius: 3px;
+            transition: width var(--transition-normal);
+        }
+
+        .progress-fill.almost-full {
+            background: var(--color-warning);
+        }
+
+        .progress-fill.full {
+            background: var(--color-info);
+        }
+
+        .reservations-count {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+
+        .reservations-label {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+        }
+
+        .reservations-label.text-success {
+            color: var(--color-success-dark);
+        }
+
+        /* ========================================
+           CELL: NEXT MEETING
+        ======================================== */
+        .next-meeting {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: var(--font-size-sm);
+            color: var(--text-primary);
+        }
+
+        .next-meeting i {
+            color: var(--text-muted);
+        }
+
+        .next-meeting.urgent {
+            background: var(--color-warning-bg);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-md);
+        }
+
+        .next-meeting.urgent .meeting-time {
+            color: var(--color-warning-dark);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .no-meeting {
+            color: var(--text-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        /* ========================================
+           CELL: ASSIGNEE
+        ======================================== */
+        .assignee {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .assignee .user-avatar-initials {
+            width: 28px;
+            height: 28px;
+            font-size: 11px;
+        }
+
+        .assignee-name {
+            font-size: var(--font-size-sm);
+            color: var(--text-primary);
+        }
+
+        /* ========================================
+           CELL: COPY LINK BUTTON
+        ======================================== */
+        .btn-copy-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: var(--color-primary-bg);
+            color: var(--color-primary);
+            border: 1px solid var(--color-primary-light);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-copy-link:hover {
+            background: var(--color-primary);
+            color: var(--text-inverse);
+        }
+
+        .btn-copy-link.copied {
+            background: var(--color-success);
+            border-color: var(--color-success);
+            color: var(--text-inverse);
+        }
+
+        .btn-copy-link:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* ========================================
+           CELL: ACTIONS (Menu button)
+        ======================================== */
+        .cell-actions {
+            text-align: center;
+        }
+
+        .action-menu-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .action-menu-btn:hover {
+            background: var(--color-gray-100);
+            color: var(--text-primary);
+        }
+
+        /* ========================================
+           CONTEXT MENU
+        ======================================== */
+        .context-menu {
+            position: fixed;
+            min-width: 200px;
+            background: var(--color-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            z-index: var(--z-dropdown);
+            padding: var(--spacing-xs) 0;
+            display: none;
+        }
+
+        .context-menu.show {
+            display: block;
+            animation: fadeIn var(--transition-fast);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .context-menu-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: var(--font-size-sm);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+        }
+
+        .context-menu-item:hover {
+            background: var(--color-gray-50);
+        }
+
+        .context-menu-item i {
+            width: 16px;
+            color: var(--text-muted);
+        }
+
+        .context-menu-item kbd {
+            margin-left: auto;
+            font-size: 10px;
+            color: var(--text-muted);
+            background: var(--color-gray-100);
+            padding: 2px 4px;
+            border-radius: var(--radius-sm);
+            font-family: monospace;
+        }
+
+        .context-menu-item--danger {
+            color: var(--color-danger);
+        }
+
+        .context-menu-item--danger i {
+            color: var(--color-danger);
+        }
+
+        .context-menu-divider {
+            height: 1px;
+            background: var(--border-color-light);
+            margin: var(--spacing-xs) 0;
+        }
+
+        /* ========================================
+           EMPTY STATE
+        ======================================== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: var(--color-primary-bg);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .empty-state-icon i {
+            font-size: 32px;
+            color: var(--color-primary);
+        }
+
+        .empty-state-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .empty-state-description {
+            font-size: var(--font-size-base);
+            color: var(--text-muted);
+            max-width: 400px;
+            margin: 0 auto var(--spacing-xl);
+        }
+
+        /* ========================================
+           TOAST NOTIFICATIONS
+        ======================================== */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: var(--z-toast);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            min-width: 280px;
+            animation: slideInRight var(--transition-normal);
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .toast-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .toast-icon.success {
+            background: var(--color-success-bg);
+            color: var(--color-success);
+        }
+
+        .toast-icon.error {
+            background: var(--color-danger-bg);
+            color: var(--color-danger);
+        }
+
+        .toast-message {
+            font-size: var(--font-size-sm);
+            color: var(--text-primary);
+        }
+
+        .toast-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: var(--spacing-xs);
+        }
+
+        /* ========================================
+           SCHEDULE MODAL
+        ======================================== */
+        .schedule-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: var(--z-modal);
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+        }
+
+        .schedule-modal-overlay.show {
+            display: flex;
+        }
+
+        .schedule-modal {
+            background: var(--color-white);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-xl);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h2 {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .modal-header h2::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: var(--color-success);
+            border-radius: 2px;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-gray-100);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .modal-close:hover {
+            background: var(--color-gray-200);
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: var(--spacing-xl);
+        }
+
+        .modal-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .modal-form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .modal-form-group label {
+            display: block;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .modal-form-group label .required {
+            color: var(--color-danger);
+        }
+
+        .modal-form-input,
+        .modal-form-select {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+            font-family: var(--font-family);
+            color: var(--text-primary);
+            background: var(--color-gray-50);
+            transition: all var(--transition-fast);
+        }
+
+        .modal-form-input:focus,
+        .modal-form-select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            background: var(--color-white);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .modal-form-input.error,
+        .modal-form-select.error {
+            border-color: var(--color-danger);
+            background: var(--color-danger-bg);
+        }
+
+        .duration-options {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+
+        .duration-chip {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            background: var(--color-gray-50);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-secondary);
+        }
+
+        .duration-chip:hover {
+            border-color: var(--color-gray-400);
+            background: var(--color-gray-100);
+        }
+
+        .duration-chip.active {
+            background: var(--color-success);
+            border-color: var(--color-success);
+            color: var(--color-white);
+        }
+
+        .duration-chip input[type="radio"] {
+            display: none;
+        }
+
+        .section-title {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            margin: var(--spacing-xl) 0 var(--spacing-md) 0;
+        }
+
+        .time-slots-container {
+            background: var(--color-gray-50);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+        }
+
+        .time-slot {
+            display: grid;
+            grid-template-columns: 1fr 100px 100px 40px;
+            gap: var(--spacing-md);
+            align-items: end;
+            padding: var(--spacing-md);
+            background: var(--color-white);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .time-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+            position: relative;
+        }
+
+        .time-input-group label {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .time-input-group input,
+        .time-input-group select {
+            padding: var(--spacing-sm);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            background: var(--color-gray-50);
+            color: var(--text-primary);
+        }
+
+        .time-input-group input:focus,
+        .time-input-group select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            background: var(--color-white);
+        }
+
+        .time-input-group .error-message {
+            font-size: 10px;
+            color: var(--color-danger);
+            position: absolute;
+            bottom: -16px;
+            left: 0;
+            display: none;
+        }
+
+        .time-input-group.has-error .error-message {
+            display: block;
+        }
+
+        .time-input-group.has-error input,
+        .time-input-group.has-error select {
+            border-color: var(--color-danger);
+            background: var(--color-danger-bg);
+        }
+
+        .btn-add-slot {
+            width: 100%;
+            padding: var(--spacing-sm);
+            background: var(--color-white);
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-add-slot:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            background: var(--color-primary-bg);
+        }
+
+        .btn-remove-slot {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-gray-100);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-remove-slot:hover {
+            background: var(--color-danger-bg);
+            border-color: var(--color-danger);
+            color: var(--color-danger);
+        }
+
+        .info-box {
+            background: var(--color-primary-bg);
+            border: 1px solid rgba(0, 102, 204, 0.2);
+            border-left: 3px solid var(--color-primary);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin: var(--spacing-lg) 0;
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-xl);
+            border-top: 1px solid var(--border-color);
+            background: var(--color-gray-50);
+        }
+
+        .btn-cancel {
+            background: var(--color-gray-200);
+            color: var(--text-secondary);
+        }
+
+        .btn-cancel:hover {
+            background: var(--color-gray-300);
+        }
+
+        .btn-submit {
+            background: var(--color-success);
+            color: var(--color-white);
+        }
+
+        .btn-submit:hover {
+            background: var(--color-success-dark);
+        }
+
+        .btn-submit.loading {
+            position: relative;
+            color: transparent;
+            pointer-events: none;
+        }
+
+        .btn-submit.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* ========================================
+           RESPONSIVE
+        ======================================== */
+        @media (max-width: 1200px) {
+            .main-nav {
+                display: none;
+            }
+
+            .filters-left {
+                flex-wrap: wrap;
+            }
+
+            .schedule-table .cell-type {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-md);
+            }
+
+            .filters-bar {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+
+            .filters-left,
+            .filters-right {
+                width: 100%;
+            }
+
+            .status-tabs {
+                width: 100%;
+                overflow-x: auto;
+            }
+
+            .schedule-table-container {
+                overflow-x: auto;
+            }
+
+            .modal-form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .time-slot {
+                grid-template-columns: 1fr;
+            }
+
+            .schedule-modal {
+                margin: var(--spacing-md);
+                max-height: calc(100vh - var(--spacing-xl));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top blue bar -->
+    <div class="top-bar"></div>
+
+    <!-- ========================================
+         HEADER - Nawigacja glowna VoxDeveloper
+    ======================================== -->
+    <header class="main-header">
+        <div class="header-left">
+            <div class="logo">
+                <div class="logo-container">
+                    <svg class="logo-icon" viewBox="0 0 50 35" width="50" height="35">
+                        <path d="M25 5 C15 5, 5 15, 5 20 C10 15, 18 12, 25 14 C32 12, 40 15, 45 20 C45 15, 35 5, 25 5" fill="#00A0B0"/>
+                        <path d="M25 14 C18 14, 10 18, 8 25 C15 20, 20 18, 25 20 C30 18, 35 20, 42 25 C40 18, 32 14, 25 14" fill="#00C4B4"/>
+                    </svg>
+                    <div class="logo-text">
+                        <span class="logo-main">VOX<span class="logo-developer">DEVELOPER</span></span>
+                        <span class="logo-sub">CRM</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <a href="#" class="nav-item">Pulpit</a>
+                <a href="#" class="nav-item has-dropdown">Leady <i class="fas fa-chevron-down"></i></a>
+                <a href="#" class="nav-item">Zgloszenia</a>
+                <a href="#" class="nav-item">Klienci</a>
+                <a href="#" class="nav-item has-dropdown">Wyszukiwarka <i class="fas fa-chevron-down"></i></a>
+                <a href="#" class="nav-item has-dropdown active">Kalendarz <i class="fas fa-chevron-down"></i></a>
+                <a href="#" class="nav-item">Rezerwacje</a>
+                <a href="#" class="nav-item has-dropdown">Wiecej <i class="fas fa-chevron-down"></i></a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="search-box">
+                <i class="fas fa-plus"></i>
+                <input type="text" placeholder="Wyszukaj klienta">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="user-menu">
+                <span class="user-name">Zalogowany jako<br><strong>Nowak Jan</strong></span>
+                <div class="user-avatar-initials">JN</div>
+                <div class="header-icons">
+                    <span class="icon-btn"><i class="fas fa-comment"></i></span>
+                    <span class="icon-btn"><i class="fas fa-th"></i></span>
+                    <span class="icon-btn notification"><i class="fas fa-bell"></i><span class="badge">3</span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========================================
+         MAIN CONTENT
+    ======================================== -->
+    <main class="main-content">
+
+        <!-- ========================================
+             PAGE HEADER
+        ======================================== -->
+        <div class="page-header">
+            <div class="page-title">
+                <h1>Harmonogramy</h1>
+                <p class="subtitle">Zarzadzanie linkami do rezerwacji spotkan</p>
+            </div>
+            <div class="page-actions">
+                <button class="btn btn-primary" onclick="openScheduleModal()">
+                    <i class="fas fa-plus"></i> Nowy harmonogram
+                </button>
+            </div>
+        </div>
+
+        <!-- ========================================
+             MAIN TABS (Harmonogramy / Spotkania)
+        ======================================== -->
+        <div class="main-tabs-container">
+            <div class="main-tabs">
+                <button class="main-tab active" data-tab="harmonogramy">
+                    <i class="fas fa-list-ul"></i>
+                    Harmonogramy
+                    <span class="tab-badge" id="count-schedules">0</span>
+                </button>
+                <button class="main-tab" data-tab="spotkania">
+                    <i class="fas fa-calendar-alt"></i>
+                    Spotkania
+                    <span class="tab-badge" id="count-meetings">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ========================================
+             TAB PANEL: HARMONOGRAMY
+        ======================================== -->
+        <div class="tab-panel active" id="panel-harmonogramy">
+
+        <!-- ========================================
+             FILTERS BAR
+        ======================================== -->
+        <div class="filters-bar">
+            <div class="filters-left">
+                <div class="filter-group">
+                    <label>Typ spotkania</label>
+                    <select class="filter-select" id="filterType">
+                        <option value="">Wszystkie</option>
+                        <option value="odbior">Odbior lokalu</option>
+                        <option value="umowa">Podpisanie umowy</option>
+                        <option value="spotkanie">Spotkanie handlowe</option>
+                        <option value="inne">Inne</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Przypisany do</label>
+                    <select class="filter-select" id="filterAssignee">
+                        <option value="">Wszyscy</option>
+                        <option value="Kowalski Jan">Kowalski Jan</option>
+                        <option value="Nowak Anna">Nowak Anna</option>
+                        <option value="Wiśniewski Piotr">Wiśniewski Piotr</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filters-right">
+                <div class="filter-group search-input-wrapper">
+                    <label>&nbsp;</label>
+                    <div style="position: relative;">
+                        <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                        <input type="text" class="filter-input" id="searchInput" placeholder="Szukaj harmonogramu..." style="padding-left: 32px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             TABLE
+        ======================================== -->
+        <div class="schedule-table-container">
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-sort="title">Nazwa <i class="fas fa-sort sort-icon"></i></th>
+                        <th>Status</th>
+                        <th class="sortable" data-sort="reservations">Rezerwacje <i class="fas fa-sort sort-icon"></i></th>
+                        <th class="sortable" data-sort="nextMeeting">Najblizsze spotkanie <i class="fas fa-sort sort-icon"></i></th>
+                        <th class="sortable" data-sort="assignee">Przypisany do <i class="fas fa-sort sort-icon"></i></th>
+                        <th>Link</th>
+                        <th>Akcje</th>
+                    </tr>
+                </thead>
+                <tbody id="scheduleTableBody">
+                    <!-- Rows will be generated by JavaScript -->
+                </tbody>
+            </table>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-state-icon">
+                    <i class="fas fa-calendar-plus"></i>
+                </div>
+                <h3 class="empty-state-title">Brak harmonogramow</h3>
+                <p class="empty-state-description">
+                    Utworz pierwszy harmonogram, aby rozpoczac zarzadzanie rezerwacjami spotkan.
+                </p>
+                <button class="btn btn-primary" onclick="openScheduleModal()">
+                    <i class="fas fa-plus"></i> Utworz harmonogram
+                </button>
+            </div>
+        </div>
+
+        </div> <!-- END panel-harmonogramy -->
+
+        <!-- ========================================
+             TAB PANEL: SPOTKANIA (Kalendarz)
+        ======================================== -->
+        <div class="tab-panel" id="panel-spotkania">
+            <!-- Calendar Filters -->
+            <div class="calendar-filters">
+                <div class="calendar-filter-group">
+                    <label>Harmonogram</label>
+                    <select class="calendar-filter-select" id="calendarFilterSchedule">
+                        <option value="">Wszystkie harmonogramy</option>
+                    </select>
+                </div>
+                <div class="calendar-filter-group">
+                    <label>Typ spotkania</label>
+                    <select class="calendar-filter-select" id="calendarFilterMeetingType">
+                        <option value="">Wszystkie typy</option>
+                        <option value="odbior">Odbiór lokalu</option>
+                        <option value="umowa">Podpisanie umowy</option>
+                        <option value="spotkanie">Spotkanie handlowe</option>
+                        <option value="inne">Inne</option>
+                    </select>
+                </div>
+                <div class="calendar-filter-group">
+                    <label>Osoba</label>
+                    <select class="calendar-filter-select" id="calendarFilterPerson">
+                        <option value="">Wszystkie osoby</option>
+                        <option value="Kowalski Jan">Kowalski Jan</option>
+                        <option value="Nowak Anna">Nowak Anna</option>
+                        <option value="Wiśniewski Piotr">Wiśniewski Piotr</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <div class="calendar-nav">
+                        <button class="calendar-nav-btn" id="prevMonth">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <h2 class="calendar-title" id="calendarTitle">Styczen 2026</h2>
+                        <button class="calendar-nav-btn" id="nextMonth">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <button class="calendar-today-btn" id="todayBtn">Dzisiaj</button>
+                </div>
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Calendar will be rendered by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ========================================
+         SCHEDULE MODAL
+    ======================================== -->
+    <div class="schedule-modal-overlay" id="scheduleModalOverlay">
+        <div class="schedule-modal" role="dialog" aria-labelledby="scheduleModalTitle" aria-modal="true">
+            <div class="modal-header">
+                <h2 id="scheduleModalTitle">Nowy harmonogram</h2>
+                <button class="modal-close" onclick="closeScheduleModal()" aria-label="Zamknij">&times;</button>
+            </div>
+            <form id="scheduleForm">
+                <div class="modal-body">
+                    <!-- Nazwa harmonogramu -->
+                    <div class="modal-form-group">
+                        <label>Nazwa harmonogramu <span class="required">*</span></label>
+                        <input type="text" class="modal-form-input" id="modalScheduleTitle" placeholder="np. Spotkanie w sprawie odbioru lokalu" required>
+                    </div>
+
+                    <!-- Typ spotkania i przypisanie -->
+                    <div class="modal-form-row">
+                        <div class="modal-form-group">
+                            <label>Typ spotkania <span class="required">*</span></label>
+                            <select class="modal-form-select" id="modalMeetingType" required>
+                                <option value="">Wybierz typ...</option>
+                                <option value="odbior">Odbior lokalu</option>
+                                <option value="umowa">Podpisanie umowy</option>
+                                <option value="spotkanie">Spotkanie handlowe</option>
+                                <option value="inne">Inne</option>
+                            </select>
+                        </div>
+                        <div class="modal-form-group">
+                            <label>Przypisany do <span class="required">*</span></label>
+                            <select class="modal-form-select" id="modalAssignedUser" required>
+                                <option value="">Wybierz osobe...</option>
+                                <option value="Kowalski Jan">Kowalski Jan</option>
+                                <option value="Nowak Anna">Nowak Anna</option>
+                                <option value="Wiśniewski Piotr">Wiśniewski Piotr</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Czas trwania -->
+                    <div class="modal-form-group">
+                        <label>Czas trwania spotkania <span class="required">*</span></label>
+                        <div class="duration-options">
+                            <label class="duration-chip">
+                                <input type="radio" name="modalDuration" value="30">
+                                <span>30 min</span>
+                            </label>
+                            <label class="duration-chip active">
+                                <input type="radio" name="modalDuration" value="60" checked>
+                                <span>1 godz.</span>
+                            </label>
+                            <label class="duration-chip">
+                                <input type="radio" name="modalDuration" value="90">
+                                <span>1,5 godz.</span>
+                            </label>
+                            <label class="duration-chip">
+                                <input type="radio" name="modalDuration" value="120">
+                                <span>2 godz.</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Okna dostepnosci -->
+                    <div class="section-title">Okna dostepnosci</div>
+                    <div class="time-slots-container">
+                        <div id="modalTimeSlotsContainer">
+                            <!-- Pierwszy slot -->
+                            <div class="time-slot">
+                                <div class="time-input-group">
+                                    <label>Data</label>
+                                    <input type="date" class="modal-date-input" required>
+                                    <div class="error-message"></div>
+                                </div>
+                                <div class="time-input-group">
+                                    <label>od</label>
+                                    <select class="modal-time-from" required></select>
+                                    <div class="error-message"></div>
+                                </div>
+                                <div class="time-input-group">
+                                    <label>do</label>
+                                    <select class="modal-time-to" required></select>
+                                    <div class="error-message"></div>
+                                </div>
+                                <button type="button" class="btn-remove-slot" onclick="removeModalSlot(this)" title="Usun">&times;</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-add-slot" onclick="addModalSlot()">
+                            <i class="fas fa-plus"></i> Dodaj kolejne okno
+                        </button>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Wskazowka:</strong> Dodaj kilka okien dostepnosci, aby zwiekszyc szanse na znalezienie odpowiedniego terminu.
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" onclick="closeScheduleModal()">Anuluj</button>
+                    <button type="submit" class="btn btn-submit" id="modalSubmitBtn">
+                        <i class="fas fa-save"></i> Zapisz harmonogram
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================
+         MEETING DETAIL MODAL
+    ======================================== -->
+    <div class="meeting-modal-overlay" id="meetingModalOverlay">
+        <div class="meeting-modal" role="dialog" aria-labelledby="meetingModalTitle" aria-modal="true">
+            <div class="meeting-modal-header">
+                <h3 id="meetingModalTitle">Szczegoly spotkania</h3>
+                <button class="modal-close" onclick="closeMeetingModal()" aria-label="Zamknij">&times;</button>
+            </div>
+            <div class="meeting-modal-body">
+                <!-- Status -->
+                <div class="meeting-detail-section">
+                    <div class="meeting-detail-label">Status</div>
+                    <div id="meetingStatus"></div>
+                </div>
+
+                <!-- Date and Time -->
+                <div class="meeting-detail-row">
+                    <div class="meeting-detail-section">
+                        <div class="meeting-detail-label">Data</div>
+                        <div class="meeting-detail-value large" id="meetingDate"></div>
+                    </div>
+                    <div class="meeting-detail-section">
+                        <div class="meeting-detail-label">Godzina</div>
+                        <div class="meeting-detail-value large" id="meetingTime"></div>
+                    </div>
+                </div>
+
+                <!-- Schedule -->
+                <div class="meeting-detail-section">
+                    <div class="meeting-detail-label">Harmonogram</div>
+                    <div class="meeting-detail-value" id="meetingSchedule"></div>
+                </div>
+
+                <!-- Company Representative -->
+                <div class="meeting-detail-section">
+                    <div class="meeting-detail-label">Przedstawiciel firmy</div>
+                    <div class="meeting-person-card">
+                        <div class="meeting-person-avatar company" id="companyAvatar"></div>
+                        <div class="meeting-person-info">
+                            <div class="meeting-person-name" id="companyName"></div>
+                            <div class="meeting-person-role">Opiekun klienta</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Client -->
+                <div class="meeting-detail-section">
+                    <div class="meeting-detail-label">Klient</div>
+                    <div class="meeting-person-card">
+                        <div class="meeting-person-avatar client" id="clientAvatar"></div>
+                        <div class="meeting-person-info">
+                            <div class="meeting-person-name" id="clientName"></div>
+                            <div class="meeting-person-contact">
+                                <i class="fas fa-envelope"></i>
+                                <a href="#" id="clientEmail"></a>
+                            </div>
+                            <div class="meeting-person-contact" id="clientUnitSection" style="display: none;">
+                                <i class="fas fa-home"></i>
+                                <span id="clientUnit"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="meeting-modal-footer">
+                <div class="btn-group">
+                    <button class="btn btn-danger-outline" id="btnCancelMeeting" onclick="cancelMeeting()">
+                        <i class="fas fa-times"></i> Anuluj spotkanie
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-success-outline" id="btnConfirmMeeting" onclick="confirmMeeting()">
+                        <i class="fas fa-check"></i> Potwierdz
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeMeetingModal()">Zamknij</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+         CONTEXT MENU
+    ======================================== -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" data-action="view">
+            <i class="fas fa-eye"></i>
+            <span>Podglad rezerwacji</span>
+        </div>
+        <div class="context-menu-item" data-action="edit">
+            <i class="fas fa-edit"></i>
+            <span>Edytuj harmonogram</span>
+        </div>
+        <div class="context-menu-item" data-action="copy">
+            <i class="fas fa-link"></i>
+            <span>Kopiuj link</span>
+            <kbd>Ctrl+C</kbd>
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item" data-action="duplicate">
+            <i class="fas fa-copy"></i>
+            <span>Duplikuj</span>
+        </div>
+        <div class="context-menu-item" data-action="toggle">
+            <i class="fas fa-power-off"></i>
+            <span>Dezaktywuj</span>
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item context-menu-item--danger" data-action="delete">
+            <i class="fas fa-trash"></i>
+            <span>Usun</span>
+        </div>
+    </div>
+
+    <!-- ========================================
+         TOAST CONTAINER
+    ======================================== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ========================================
+         JAVASCRIPT
+    ======================================== -->
+    <script>
+        // ========================================
+        // CONFIG & STATE
+        // ========================================
+        const CONFIG = {
+            MEETING_TYPES: {
+                'odbior': 'Odbior lokalu',
+                'umowa': 'Podpisanie umowy',
+                'spotkanie': 'Spotkanie handlowe',
+                'inne': 'Inne'
+            },
+            USERS: ['Kowalski Jan', 'Nowak Anna', 'Wiśniewski Piotr'],
+            AVATAR_COLORS: ['#FF9800', '#1976D2', '#4CAF50', '#f44336', '#7B1FA2', '#00897B']
+        };
+
+        let schedules = [];
+        let currentFilter = 'all';
+        let currentScheduleId = null;
+
+        // ========================================
+        // UTILITY FUNCTIONS
+        // ========================================
+        function getInitials(name) {
+            return name.split(' ').map(n => n[0]).join('').toUpperCase();
+        }
+
+        function getAvatarColor(name) {
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) {
+                hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return CONFIG.AVATAR_COLORS[Math.abs(hash) % CONFIG.AVATAR_COLORS.length];
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        function formatTime(timeStr) {
+            return timeStr;
+        }
+
+        function getScheduleStatus(schedule) {
+            const now = new Date();
+            const hasBookings = schedule.bookings && schedule.bookings.length > 0;
+            const maxSlots = schedule.timeSlots ? schedule.timeSlots.length : 5;
+            const bookedSlots = hasBookings ? schedule.bookings.length : 0;
+
+            // Check if all slots in the past
+            let allExpired = true;
+            if (schedule.timeSlots) {
+                for (const slot of schedule.timeSlots) {
+                    const slotDate = new Date(slot.date + 'T' + slot.timeTo);
+                    if (slotDate > now) {
+                        allExpired = false;
+                        break;
+                    }
+                }
+            }
+
+            if (schedule.disabled) return 'disabled';
+            if (allExpired) return 'expired';
+            if (bookedSlots >= maxSlots) return 'full';
+            if (bookedSlots === 0) return 'pending';
+            return 'active';
+        }
+
+        function getNextMeeting(schedule) {
+            if (!schedule.bookings || schedule.bookings.length === 0) return null;
+
+            const now = new Date();
+            let nextBooking = null;
+
+            for (const booking of schedule.bookings) {
+                const bookingDate = new Date(booking.date + 'T' + booking.time);
+                if (bookingDate > now) {
+                    if (!nextBooking || bookingDate < new Date(nextBooking.date + 'T' + nextBooking.time)) {
+                        nextBooking = booking;
+                    }
+                }
+            }
+
+            return nextBooking;
+        }
+
+        function isUrgent(nextMeeting) {
+            if (!nextMeeting) return false;
+            const now = new Date();
+            const meetingTime = new Date(nextMeeting.date + 'T' + nextMeeting.time);
+            const hoursUntil = (meetingTime - now) / (1000 * 60 * 60);
+            return hoursUntil > 0 && hoursUntil <= 2;
+        }
+
+        // ========================================
+        // TOAST NOTIFICATIONS
+        // ========================================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <div class="toast-icon ${type}">
+                    <i class="fas fa-${type === 'success' ? 'check' : 'exclamation-triangle'}"></i>
+                </div>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ========================================
+        // COPY LINK
+        // ========================================
+        async function copyLink(scheduleId, button) {
+            const schedule = schedules.find(s => s.id === scheduleId);
+            if (!schedule) return;
+
+            const link = schedule.link || `wybor_terminu_20251017.html?schedule=${scheduleId}`;
+
+            try {
+                await navigator.clipboard.writeText(link);
+
+                if (button) {
+                    button.classList.add('copied');
+                    button.innerHTML = '<i class="fas fa-check"></i> Skopiowano';
+
+                    setTimeout(() => {
+                        button.classList.remove('copied');
+                        button.innerHTML = '<i class="fas fa-link"></i> Kopiuj';
+                    }, 2000);
+                }
+
+                showToast('Link skopiowany do schowka', 'success');
+            } catch (err) {
+                showToast('Nie udalo sie skopiowac linku', 'error');
+            }
+        }
+
+        // ========================================
+        // CONTEXT MENU
+        // ========================================
+        const contextMenu = document.getElementById('contextMenu');
+
+        function showContextMenu(e, scheduleId) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            currentScheduleId = scheduleId;
+            const schedule = schedules.find(s => s.id === scheduleId);
+
+            // Update toggle button text
+            const toggleItem = contextMenu.querySelector('[data-action="toggle"]');
+            if (schedule && schedule.disabled) {
+                toggleItem.innerHTML = '<i class="fas fa-power-off"></i><span>Aktywuj</span>';
+            } else {
+                toggleItem.innerHTML = '<i class="fas fa-power-off"></i><span>Dezaktywuj</span>';
+            }
+
+            // Position menu
+            const x = e.clientX;
+            const y = e.clientY;
+
+            contextMenu.style.left = `${x}px`;
+            contextMenu.style.top = `${y}px`;
+            contextMenu.classList.add('show');
+        }
+
+        function hideContextMenu() {
+            contextMenu.classList.remove('show');
+            currentScheduleId = null;
+        }
+
+        // Close menu on click outside
+        document.addEventListener('click', hideContextMenu);
+
+        // Handle menu actions
+        contextMenu.addEventListener('click', (e) => {
+            const item = e.target.closest('.context-menu-item');
+            if (!item || !currentScheduleId) return;
+
+            const action = item.dataset.action;
+
+            switch (action) {
+                case 'view':
+                    window.location.href = `wybor_terminu_20251017.html?schedule=${currentScheduleId}`;
+                    break;
+                case 'edit':
+                    showToast('Funkcja edycji w przygotowaniu', 'error');
+                    break;
+                case 'copy':
+                    copyLink(currentScheduleId);
+                    break;
+                case 'duplicate':
+                    duplicateSchedule(currentScheduleId);
+                    break;
+                case 'toggle':
+                    toggleSchedule(currentScheduleId);
+                    break;
+                case 'delete':
+                    deleteSchedule(currentScheduleId);
+                    break;
+            }
+
+            hideContextMenu();
+        });
+
+        // ========================================
+        // SCHEDULE ACTIONS
+        // ========================================
+        function duplicateSchedule(scheduleId) {
+            const schedule = schedules.find(s => s.id === scheduleId);
+            if (!schedule) return;
+
+            const newSchedule = {
+                ...JSON.parse(JSON.stringify(schedule)),
+                id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+                hash: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+                title: schedule.title + ' (kopia)',
+                createdAt: new Date().toISOString(),
+                bookings: []
+            };
+
+            schedules.push(newSchedule);
+            saveSchedules();
+            renderTable();
+            showToast('Harmonogram zduplikowany', 'success');
+        }
+
+        function toggleSchedule(scheduleId) {
+            const schedule = schedules.find(s => s.id === scheduleId);
+            if (!schedule) return;
+
+            schedule.disabled = !schedule.disabled;
+            saveSchedules();
+            renderTable();
+            showToast(schedule.disabled ? 'Harmonogram dezaktywowany' : 'Harmonogram aktywowany', 'success');
+        }
+
+        function deleteSchedule(scheduleId) {
+            if (!confirm('Czy na pewno chcesz usunac ten harmonogram?')) return;
+
+            schedules = schedules.filter(s => s.id !== scheduleId);
+            saveSchedules();
+            renderTable();
+            showToast('Harmonogram usuniety', 'success');
+        }
+
+        // ========================================
+        // DATA MANAGEMENT
+        // ========================================
+        function loadSchedules() {
+            try {
+                const stored = localStorage.getItem('schedules');
+                schedules = stored ? JSON.parse(stored) : [];
+
+                // Add sample data if empty
+                if (schedules.length === 0) {
+                    schedules = generateSampleData();
+                    saveSchedules();
+                }
+            } catch (e) {
+                console.error('Error loading schedules:', e);
+                schedules = [];
+            }
+        }
+
+        function saveSchedules() {
+            localStorage.setItem('schedules', JSON.stringify(schedules));
+        }
+
+        function generateSampleData() {
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            const dayAfterTomorrow = new Date(now);
+            dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+
+            const nextWeek = new Date(now);
+            nextWeek.setDate(nextWeek.getDate() + 7);
+
+            const inTwoWeeks = new Date(now);
+            inTwoWeeks.setDate(inTwoWeeks.getDate() + 14);
+
+            return [
+                {
+                    id: 'demo1',
+                    hash: 'abc123',
+                    title: 'Odbiory Zamkowe Osiedle Etap 1',
+                    meetingType: 'odbior',
+                    assignedUser: 'Kowalski Jan',
+                    duration: 60,
+                    timeSlots: [
+                        { date: tomorrow.toISOString().split('T')[0], timeFrom: '09:00', timeTo: '12:00' },
+                        { date: tomorrow.toISOString().split('T')[0], timeFrom: '14:00', timeTo: '17:00' },
+                        { date: dayAfterTomorrow.toISOString().split('T')[0], timeFrom: '09:00', timeTo: '12:00' },
+                        { date: nextWeek.toISOString().split('T')[0], timeFrom: '10:00', timeTo: '15:00' }
+                    ],
+                    link: 'wybor_terminu_20251017.html?schedule=abc123',
+                    createdAt: new Date().toISOString(),
+                    bookings: [
+                        { date: tomorrow.toISOString().split('T')[0], time: '10:00', clientName: 'Nowak Adam', clientEmail: 'adam@example.com', unit: 'M12', status: 'confirmed' },
+                        { date: tomorrow.toISOString().split('T')[0], time: '15:00', clientName: 'Kowalska Maria', clientEmail: 'maria@example.com', unit: 'M24', status: 'planned' },
+                        { date: dayAfterTomorrow.toISOString().split('T')[0], time: '10:00', clientName: 'Jankowski Piotr', clientEmail: 'piotr@example.com', unit: 'M08', status: 'planned' }
+                    ]
+                },
+                {
+                    id: 'demo2',
+                    hash: 'def456',
+                    title: 'Umowy deweloperskie - Parkowe Wzgorze',
+                    meetingType: 'umowa',
+                    assignedUser: 'Nowak Anna',
+                    duration: 90,
+                    timeSlots: [
+                        { date: nextWeek.toISOString().split('T')[0], timeFrom: '09:00', timeTo: '17:00' },
+                        { date: inTwoWeeks.toISOString().split('T')[0], timeFrom: '09:00', timeTo: '17:00' }
+                    ],
+                    link: 'wybor_terminu_20251017.html?schedule=def456',
+                    createdAt: new Date().toISOString(),
+                    bookings: []
+                },
+                {
+                    id: 'demo3',
+                    hash: 'ghi789',
+                    title: 'Prezentacje - Nowa inwestycja Centrum',
+                    meetingType: 'spotkanie',
+                    assignedUser: 'Wiśniewski Piotr',
+                    duration: 30,
+                    timeSlots: [
+                        { date: now.toISOString().split('T')[0], timeFrom: '14:00', timeTo: '17:00' },
+                        { date: tomorrow.toISOString().split('T')[0], timeFrom: '10:00', timeTo: '16:00' }
+                    ],
+                    link: 'wybor_terminu_20251017.html?schedule=ghi789',
+                    createdAt: new Date().toISOString(),
+                    bookings: [
+                        { date: now.toISOString().split('T')[0], time: '15:00', clientName: 'Zieliński Tomasz', clientEmail: 'tomasz@example.com', status: 'confirmed' },
+                        { date: now.toISOString().split('T')[0], time: '16:00', clientName: 'Wiśniewska Karolina', clientEmail: 'karolina@example.com', status: 'planned' }
+                    ]
+                },
+                {
+                    id: 'demo4',
+                    hash: 'jkl012',
+                    title: 'Konsultacje kredytowe - Osiedle Sloneczne',
+                    meetingType: 'inne',
+                    assignedUser: 'Kowalski Jan',
+                    duration: 60,
+                    timeSlots: [
+                        { date: '2025-01-10', timeFrom: '09:00', timeTo: '12:00' }
+                    ],
+                    link: 'wybor_terminu_20251017.html?schedule=jkl012',
+                    createdAt: '2025-01-05T10:00:00Z',
+                    bookings: [
+                        { date: '2025-01-10', time: '10:00', clientName: 'Malinowska Ewa', clientEmail: 'ewa@example.com' }
+                    ]
+                }
+            ];
+        }
+
+        // ========================================
+        // FILTERING
+        // ========================================
+        function filterSchedules() {
+            let filtered = [...schedules];
+
+            // Status filter
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(s => getScheduleStatus(s) === currentFilter);
+            }
+
+            // Type filter
+            const typeFilter = document.getElementById('filterType').value;
+            if (typeFilter) {
+                filtered = filtered.filter(s => s.meetingType === typeFilter);
+            }
+
+            // Assignee filter
+            const assigneeFilter = document.getElementById('filterAssignee').value;
+            if (assigneeFilter) {
+                filtered = filtered.filter(s => s.assignedUser === assigneeFilter);
+            }
+
+            // Search filter
+            const searchFilter = document.getElementById('searchInput').value.toLowerCase();
+            if (searchFilter) {
+                filtered = filtered.filter(s =>
+                    s.title.toLowerCase().includes(searchFilter) ||
+                    s.assignedUser.toLowerCase().includes(searchFilter)
+                );
+            }
+
+            return filtered;
+        }
+
+        function updateCounts() {
+            // Count schedules
+            document.getElementById('count-schedules').textContent = schedules.length;
+
+            // Count all meetings (bookings)
+            let totalMeetings = 0;
+            schedules.forEach(s => {
+                if (s.bookings) {
+                    totalMeetings += s.bookings.length;
+                }
+            });
+            document.getElementById('count-meetings').textContent = totalMeetings;
+        }
+
+        // ========================================
+        // RENDER TABLE
+        // ========================================
+        function renderTable() {
+            const tbody = document.getElementById('scheduleTableBody');
+            const emptyState = document.getElementById('emptyState');
+            const filtered = filterSchedules();
+
+            updateCounts();
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+
+            tbody.innerHTML = filtered.map(schedule => {
+                const status = getScheduleStatus(schedule);
+                const nextMeeting = getNextMeeting(schedule);
+                const urgent = isUrgent(nextMeeting);
+                const maxSlots = schedule.timeSlots ? schedule.timeSlots.length : 5;
+                const bookedSlots = schedule.bookings ? schedule.bookings.length : 0;
+                const progress = Math.round((bookedSlots / maxSlots) * 100);
+
+                let progressClass = '';
+                if (progress >= 100) progressClass = 'full';
+                else if (progress >= 80) progressClass = 'almost-full';
+
+                let statusBadge = '';
+                switch (status) {
+                    case 'active':
+                        statusBadge = '<span class="status-badge status-active"><i class="fas fa-circle"></i> Aktywny</span>';
+                        break;
+                    case 'pending':
+                        statusBadge = '<span class="status-badge status-pending"><i class="fas fa-circle"></i> Oczekujacy</span>';
+                        break;
+                    case 'full':
+                        statusBadge = '<span class="status-badge status-full"><i class="fas fa-check-circle"></i> Pelny</span>';
+                        break;
+                    case 'expired':
+                        statusBadge = '<span class="status-badge status-expired"><i class="fas fa-ban"></i> Wygasly</span>';
+                        break;
+                    case 'disabled':
+                        statusBadge = '<span class="status-badge status-disabled"><i class="fas fa-ban"></i> Nieaktywny</span>';
+                        break;
+                }
+
+                let nextMeetingHtml = '';
+                if (nextMeeting) {
+                    const meetingDate = new Date(nextMeeting.date);
+                    const today = new Date();
+                    const isToday = meetingDate.toDateString() === today.toDateString();
+
+                    nextMeetingHtml = `
+                        <div class="next-meeting ${urgent ? 'urgent' : ''}">
+                            <i class="fas fa-calendar"></i>
+                            <span class="meeting-date">${isToday ? 'Dzis' : formatDate(nextMeeting.date)}</span>
+                            <span class="meeting-time">${urgent ? 'za chwile (' : ''}${nextMeeting.time}${urgent ? ')' : ''}</span>
+                        </div>
+                    `;
+                } else {
+                    nextMeetingHtml = '<span class="no-meeting"><i class="fas fa-minus"></i> Brak</span>';
+                }
+
+                const avatarColor = getAvatarColor(schedule.assignedUser);
+                const initials = getInitials(schedule.assignedUser);
+                const meetingTypeName = CONFIG.MEETING_TYPES[schedule.meetingType] || schedule.meetingType;
+
+                const rowClass = `schedule-row ${urgent ? 'attention' : ''} ${status === 'disabled' || status === 'expired' ? 'disabled' : ''}`;
+                const isDisabled = status === 'disabled' || status === 'expired';
+
+                return `
+                    <tr class="${rowClass}" data-id="${schedule.id}">
+                        <td class="cell-name">
+                            <div class="schedule-name-wrapper">
+                                <span class="schedule-name">
+                                    ${urgent ? '<i class="fas fa-exclamation-circle attention-indicator" title="Spotkanie wkrotce!"></i>' : ''}
+                                    ${schedule.title}
+                                </span>
+                                <span class="schedule-type">${meetingTypeName}</span>
+                            </div>
+                        </td>
+                        <td class="cell-status">
+                            ${statusBadge}
+                        </td>
+                        <td class="cell-reservations">
+                            <div class="reservations-stats">
+                                <div class="reservations-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill ${progressClass}" style="width: ${progress}%"></div>
+                                    </div>
+                                    <span class="reservations-count">${bookedSlots}/${maxSlots}</span>
+                                </div>
+                                <span class="reservations-label ${progress >= 100 ? 'text-success' : ''}">
+                                    ${progress >= 100 ? 'wszystkie zajete' : 'zarezerwowanych'}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="cell-next-meeting">
+                            ${nextMeetingHtml}
+                        </td>
+                        <td class="cell-assignee">
+                            <div class="assignee">
+                                <div class="user-avatar-initials" style="background: ${avatarColor}">${initials}</div>
+                                <span class="assignee-name">${schedule.assignedUser}</span>
+                            </div>
+                        </td>
+                        <td class="cell-link">
+                            <button class="btn-copy-link" onclick="copyLink('${schedule.id}', this)" ${isDisabled ? 'disabled' : ''}>
+                                <i class="fas fa-link"></i> Kopiuj
+                            </button>
+                        </td>
+                        <td class="cell-actions">
+                            <button class="action-menu-btn" onclick="showContextMenu(event, '${schedule.id}')">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // ========================================
+        // EVENT LISTENERS
+        // ========================================
+
+        // Main tabs (Harmonogramy / Spotkania)
+        document.querySelectorAll('.main-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+
+                // Update tab buttons
+                document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById(`panel-${targetTab}`).classList.add('active');
+
+                // Render calendar when switching to spotkania
+                if (targetTab === 'spotkania') {
+                    renderCalendar();
+                }
+            });
+        });
+
+        // Filter dropdowns
+        document.getElementById('filterType').addEventListener('change', renderTable);
+        document.getElementById('filterAssignee').addEventListener('change', renderTable);
+        document.getElementById('searchInput').addEventListener('input', renderTable);
+
+        // Sortable columns
+        document.querySelectorAll('.sortable').forEach(th => {
+            th.addEventListener('click', () => {
+                const sortKey = th.dataset.sort;
+                const isAsc = th.classList.contains('asc');
+
+                document.querySelectorAll('.sortable').forEach(t => {
+                    t.classList.remove('asc', 'desc');
+                });
+
+                th.classList.add(isAsc ? 'desc' : 'asc');
+
+                schedules.sort((a, b) => {
+                    let aVal, bVal;
+
+                    switch (sortKey) {
+                        case 'title':
+                            aVal = a.title.toLowerCase();
+                            bVal = b.title.toLowerCase();
+                            break;
+                        case 'reservations':
+                            aVal = a.bookings ? a.bookings.length : 0;
+                            bVal = b.bookings ? b.bookings.length : 0;
+                            break;
+                        case 'nextMeeting':
+                            const aMeeting = getNextMeeting(a);
+                            const bMeeting = getNextMeeting(b);
+                            aVal = aMeeting ? new Date(aMeeting.date + 'T' + aMeeting.time) : new Date('9999-12-31');
+                            bVal = bMeeting ? new Date(bMeeting.date + 'T' + bMeeting.time) : new Date('9999-12-31');
+                            break;
+                        case 'assignee':
+                            aVal = a.assignedUser.toLowerCase();
+                            bVal = b.assignedUser.toLowerCase();
+                            break;
+                        default:
+                            aVal = a[sortKey];
+                            bVal = b[sortKey];
+                    }
+
+                    if (aVal < bVal) return isAsc ? 1 : -1;
+                    if (aVal > bVal) return isAsc ? -1 : 1;
+                    return 0;
+                });
+
+                renderTable();
+            });
+        });
+
+        // ========================================
+        // CALENDAR
+        // ========================================
+        let currentCalendarDate = new Date();
+
+        const MONTHS_PL = [
+            'Styczen', 'Luty', 'Marzec', 'Kwiecien', 'Maj', 'Czerwiec',
+            'Lipiec', 'Sierpien', 'Wrzesien', 'Pazdziernik', 'Listopad', 'Grudzien'
+        ];
+
+        const DAYS_PL = ['Pon', 'Wt', 'Sr', 'Czw', 'Pt', 'Sob', 'Ndz'];
+
+        function getAllBookings() {
+            const bookings = [];
+            schedules.forEach((schedule, scheduleIndex) => {
+                if (schedule.bookings) {
+                    schedule.bookings.forEach((booking, bookingIndex) => {
+                        bookings.push({
+                            ...booking,
+                            // Add status if not present (default to 'planned')
+                            status: booking.status || 'planned',
+                            scheduleTitle: schedule.title,
+                            scheduleId: schedule.id,
+                            meetingType: schedule.meetingType,
+                            assignedUser: schedule.assignedUser,
+                            duration: schedule.duration,
+                            // Create unique booking ID for reference
+                            bookingId: `${schedule.id}_${bookingIndex}`
+                        });
+                    });
+                }
+            });
+            return bookings;
+        }
+
+        function getBookingsForDate(dateStr) {
+            const filterSchedule = document.getElementById('calendarFilterSchedule')?.value || '';
+            const filterMeetingType = document.getElementById('calendarFilterMeetingType')?.value || '';
+            const filterPerson = document.getElementById('calendarFilterPerson')?.value || '';
+
+            return getAllBookings().filter(b => {
+                // Basic filters
+                if (b.date !== dateStr) return false;
+                if (b.status === 'cancelled') return false;
+
+                // Schedule filter
+                if (filterSchedule && b.scheduleId !== filterSchedule) return false;
+
+                // Meeting type filter
+                if (filterMeetingType && b.meetingType !== filterMeetingType) return false;
+
+                // Person filter (assigned user)
+                if (filterPerson && b.assignedUser !== filterPerson) return false;
+
+                return true;
+            });
+        }
+
+        function getInitials(name) {
+            if (!name) return '??';
+            return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        }
+
+        function formatDatePL(dateStr) {
+            const date = new Date(dateStr);
+            const days = ['Niedziela', 'Poniedzialek', 'Wtorek', 'Sroda', 'Czwartek', 'Piatek', 'Sobota'];
+            const months = ['stycznia', 'lutego', 'marca', 'kwietnia', 'maja', 'czerwca',
+                           'lipca', 'sierpnia', 'wrzesnia', 'pazdziernika', 'listopada', 'grudnia'];
+            return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'planned': { text: 'Planowane', icon: 'fa-clock', class: 'planned' },
+                'confirmed': { text: 'Potwierdzone', icon: 'fa-check-circle', class: 'confirmed' },
+                'cancelled': { text: 'Anulowane', icon: 'fa-times-circle', class: 'cancelled' }
+            };
+            return labels[status] || labels['planned'];
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const title = document.getElementById('calendarTitle');
+
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+
+            title.textContent = `${MONTHS_PL[month]} ${year}`;
+
+            // First day of month
+            const firstDay = new Date(year, month, 1);
+            // Last day of month
+            const lastDay = new Date(year, month + 1, 0);
+
+            // Day of week for first day (0 = Sunday, convert to Monday = 0)
+            let startDayOfWeek = firstDay.getDay() - 1;
+            if (startDayOfWeek < 0) startDayOfWeek = 6;
+
+            // Build calendar HTML
+            let html = '';
+
+            // Day headers
+            DAYS_PL.forEach(day => {
+                html += `<div class="calendar-day-header">${day}</div>`;
+            });
+
+            // Previous month days
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+            for (let i = startDayOfWeek - 1; i >= 0; i--) {
+                const dayNum = prevMonthLastDay - i;
+                html += `<div class="calendar-day other-month"><span class="day-number">${dayNum}</span></div>`;
+            }
+
+            // Current month days
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const isToday = dateStr === todayStr;
+                const bookings = getBookingsForDate(dateStr);
+
+                let dayClass = 'calendar-day';
+                if (isToday) dayClass += ' today';
+
+                html += `<div class="${dayClass}" data-date="${dateStr}">`;
+                html += `<span class="day-number">${day}</span>`;
+
+                // Show up to 3 events with enhanced info
+                const maxEvents = 3;
+                bookings.slice(0, maxEvents).forEach(booking => {
+                    const status = booking.status || 'planned';
+                    const eventClass = `calendar-event status-${status}`;
+                    const statusText = status === 'confirmed' ? 'Potwierdzone' :
+                                      status === 'cancelled' ? 'Anulowane' : 'Planowane';
+                    html += `
+                        <div class="${eventClass}"
+                             onclick="openMeetingModal('${booking.bookingId}')"
+                             title="${booking.scheduleTitle} - ${booking.clientName}">
+                            <span class="event-status-badge">${statusText}</span>
+                            <span class="event-time">${booking.time}</span>
+                            <span class="event-client">${booking.clientName}</span>
+                            <span class="event-schedule">${booking.scheduleTitle}</span>
+                        </div>
+                    `;
+                });
+
+                // Show "more" link if there are more events
+                if (bookings.length > maxEvents) {
+                    html += `<div class="more-events">+ ${bookings.length - maxEvents} wiecej</div>`;
+                }
+
+                html += '</div>';
+            }
+
+            // Next month days to fill the grid
+            const totalCells = startDayOfWeek + lastDay.getDate();
+            const remainingCells = (7 - (totalCells % 7)) % 7;
+            for (let i = 1; i <= remainingCells; i++) {
+                html += `<div class="calendar-day other-month"><span class="day-number">${i}</span></div>`;
+            }
+
+            grid.innerHTML = html;
+        }
+
+        // Calendar navigation
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            renderCalendar();
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            renderCalendar();
+        });
+
+        document.getElementById('todayBtn').addEventListener('click', () => {
+            currentCalendarDate = new Date();
+            renderCalendar();
+        });
+
+        // Calendar filters
+        function populateCalendarScheduleFilter() {
+            const select = document.getElementById('calendarFilterSchedule');
+            if (!select) return;
+
+            // Keep the first option (Wszystkie harmonogramy)
+            select.innerHTML = '<option value="">Wszystkie harmonogramy</option>';
+
+            schedules.forEach(schedule => {
+                const option = document.createElement('option');
+                option.value = schedule.id;
+                option.textContent = schedule.title;
+                select.appendChild(option);
+            });
+        }
+
+        document.getElementById('calendarFilterSchedule')?.addEventListener('change', renderCalendar);
+        document.getElementById('calendarFilterMeetingType')?.addEventListener('change', renderCalendar);
+        document.getElementById('calendarFilterPerson')?.addEventListener('change', renderCalendar);
+
+        // ========================================
+        // MEETING MODAL
+        // ========================================
+        let currentMeetingBookingId = null;
+
+        function findBookingById(bookingId) {
+            const allBookings = getAllBookings();
+            return allBookings.find(b => b.bookingId === bookingId);
+        }
+
+        function openMeetingModal(bookingId) {
+            const booking = findBookingById(bookingId);
+            if (!booking) {
+                showToast('Nie znaleziono spotkania', 'error');
+                return;
+            }
+
+            currentMeetingBookingId = bookingId;
+
+            // Fill modal with data
+            const statusInfo = getStatusLabel(booking.status);
+            document.getElementById('meetingStatus').innerHTML = `
+                <span class="meeting-status-indicator ${statusInfo.class}">
+                    <i class="fas ${statusInfo.icon}"></i>
+                    ${statusInfo.text}
+                </span>
+            `;
+
+            document.getElementById('meetingDate').textContent = formatDatePL(booking.date);
+            document.getElementById('meetingTime').textContent = `${booking.time} (${booking.duration || 60} min)`;
+            document.getElementById('meetingSchedule').textContent = booking.scheduleTitle;
+
+            // Company representative
+            document.getElementById('companyAvatar').textContent = getInitials(booking.assignedUser);
+            document.getElementById('companyName').textContent = booking.assignedUser;
+
+            // Client
+            document.getElementById('clientAvatar').textContent = getInitials(booking.clientName);
+            document.getElementById('clientName').textContent = booking.clientName;
+            const emailLink = document.getElementById('clientEmail');
+            emailLink.href = `mailto:${booking.clientEmail}`;
+            emailLink.textContent = booking.clientEmail;
+
+            // Unit (if available)
+            const unitSection = document.getElementById('clientUnitSection');
+            if (booking.unit) {
+                document.getElementById('clientUnit').textContent = `Lokal ${booking.unit}`;
+                unitSection.style.display = 'flex';
+            } else {
+                unitSection.style.display = 'none';
+            }
+
+            // Update buttons based on status
+            const confirmBtn = document.getElementById('btnConfirmMeeting');
+            const cancelBtn = document.getElementById('btnCancelMeeting');
+
+            if (booking.status === 'confirmed') {
+                confirmBtn.style.display = 'none';
+                cancelBtn.innerHTML = '<i class="fas fa-times"></i> Anuluj spotkanie';
+            } else if (booking.status === 'cancelled') {
+                confirmBtn.style.display = 'none';
+                cancelBtn.style.display = 'none';
+            } else {
+                confirmBtn.style.display = '';
+                cancelBtn.style.display = '';
+            }
+
+            // Show modal
+            document.getElementById('meetingModalOverlay').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMeetingModal() {
+            document.getElementById('meetingModalOverlay').classList.remove('show');
+            document.body.style.overflow = '';
+            currentMeetingBookingId = null;
+        }
+
+        function updateBookingStatus(bookingId, newStatus) {
+            // Parse bookingId to get scheduleId and booking index
+            const [scheduleId, bookingIndexStr] = bookingId.split('_');
+            const bookingIndex = parseInt(bookingIndexStr, 10);
+
+            const schedule = schedules.find(s => s.id === scheduleId);
+            if (!schedule || !schedule.bookings || !schedule.bookings[bookingIndex]) {
+                showToast('Nie znaleziono spotkania', 'error');
+                return false;
+            }
+
+            schedule.bookings[bookingIndex].status = newStatus;
+            saveSchedules();
+            return true;
+        }
+
+        function confirmMeeting() {
+            if (!currentMeetingBookingId) return;
+
+            if (updateBookingStatus(currentMeetingBookingId, 'confirmed')) {
+                showToast('Spotkanie zostalo potwierdzone', 'success');
+                closeMeetingModal();
+                renderCalendar();
+                updateCounts();
+            }
+        }
+
+        function cancelMeeting() {
+            if (!currentMeetingBookingId) return;
+
+            if (!confirm('Czy na pewno chcesz anulowac to spotkanie?')) return;
+
+            if (updateBookingStatus(currentMeetingBookingId, 'cancelled')) {
+                showToast('Spotkanie zostalo anulowane', 'success');
+                closeMeetingModal();
+                renderCalendar();
+                updateCounts();
+            }
+        }
+
+        // Close meeting modal on overlay click
+        document.getElementById('meetingModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeMeetingModal();
+            }
+        });
+
+        // Close meeting modal on Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('meetingModalOverlay').classList.contains('show')) {
+                closeMeetingModal();
+            }
+        });
+
+        // ========================================
+        // SCHEDULE MODAL
+        // ========================================
+        const MODAL_CONFIG = {
+            TIME_START: 7,
+            TIME_END: 21,
+            TIME_INTERVAL: 30,
+            DEFAULT_TIME_FROM: '09:00',
+            DEFAULT_TIME_TO: '17:00',
+            BASE_URL: new URL('wybor_terminu_20251017.html', window.location.href).href + '?schedule='
+        };
+
+        let modalSlotCounter = 1;
+        const today = new Date().toISOString().split('T')[0];
+
+        function generateTimeOptions() {
+            const options = [];
+            for (let h = MODAL_CONFIG.TIME_START; h <= MODAL_CONFIG.TIME_END; h++) {
+                for (let m = 0; m < 60; m += MODAL_CONFIG.TIME_INTERVAL) {
+                    const hour = h.toString().padStart(2, '0');
+                    const minute = m.toString().padStart(2, '0');
+                    options.push(`${hour}:${minute}`);
+                    if (h === MODAL_CONFIG.TIME_END && m === 0) break;
+                }
+            }
+            return options;
+        }
+
+        function fillModalTimeSelects(container) {
+            const timeOptions = generateTimeOptions();
+            const selectsFrom = container.querySelectorAll('.modal-time-from');
+            const selectsTo = container.querySelectorAll('.modal-time-to');
+
+            selectsFrom.forEach(select => {
+                if (select.options.length === 0) {
+                    timeOptions.forEach(time => {
+                        const option = document.createElement('option');
+                        option.value = time;
+                        option.textContent = time;
+                        if (time === MODAL_CONFIG.DEFAULT_TIME_FROM) option.selected = true;
+                        select.appendChild(option);
+                    });
+                }
+            });
+
+            selectsTo.forEach(select => {
+                if (select.options.length === 0) {
+                    timeOptions.forEach(time => {
+                        const option = document.createElement('option');
+                        option.value = time;
+                        option.textContent = time;
+                        if (time === MODAL_CONFIG.DEFAULT_TIME_TO) option.selected = true;
+                        select.appendChild(option);
+                    });
+                }
+            });
+        }
+
+        function openScheduleModal() {
+            const overlay = document.getElementById('scheduleModalOverlay');
+            overlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+
+            // Reset form
+            document.getElementById('scheduleForm').reset();
+
+            // Reset duration chips
+            document.querySelectorAll('.duration-chip').forEach(chip => chip.classList.remove('active'));
+            document.querySelector('.duration-chip:has(input[value="60"])').classList.add('active');
+            document.querySelector('input[name="modalDuration"][value="60"]').checked = true;
+
+            // Reset time slots to one
+            const container = document.getElementById('modalTimeSlotsContainer');
+            container.innerHTML = `
+                <div class="time-slot">
+                    <div class="time-input-group">
+                        <label>Data</label>
+                        <input type="date" class="modal-date-input" min="${today}" required>
+                        <div class="error-message"></div>
+                    </div>
+                    <div class="time-input-group">
+                        <label>od</label>
+                        <select class="modal-time-from" required></select>
+                        <div class="error-message"></div>
+                    </div>
+                    <div class="time-input-group">
+                        <label>do</label>
+                        <select class="modal-time-to" required></select>
+                        <div class="error-message"></div>
+                    </div>
+                    <button type="button" class="btn-remove-slot" onclick="removeModalSlot(this)" title="Usun">&times;</button>
+                </div>
+            `;
+            modalSlotCounter = 1;
+
+            // Fill time selects
+            fillModalTimeSelects(container);
+
+            // Set min date
+            container.querySelectorAll('.modal-date-input').forEach(input => {
+                input.min = today;
+            });
+
+            // Focus on title input
+            setTimeout(() => {
+                document.getElementById('modalScheduleTitle').focus();
+            }, 100);
+        }
+
+        function closeScheduleModal() {
+            const overlay = document.getElementById('scheduleModalOverlay');
+            overlay.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        function addModalSlot() {
+            const container = document.getElementById('modalTimeSlotsContainer');
+            const newSlot = document.createElement('div');
+            newSlot.className = 'time-slot';
+            newSlot.innerHTML = `
+                <div class="time-input-group">
+                    <label>Data</label>
+                    <input type="date" class="modal-date-input" min="${today}" required>
+                    <div class="error-message"></div>
+                </div>
+                <div class="time-input-group">
+                    <label>od</label>
+                    <select class="modal-time-from" required></select>
+                    <div class="error-message"></div>
+                </div>
+                <div class="time-input-group">
+                    <label>do</label>
+                    <select class="modal-time-to" required></select>
+                    <div class="error-message"></div>
+                </div>
+                <button type="button" class="btn-remove-slot" onclick="removeModalSlot(this)" title="Usun">&times;</button>
+            `;
+            container.appendChild(newSlot);
+            fillModalTimeSelects(newSlot);
+            modalSlotCounter++;
+
+            // Animation
+            newSlot.style.opacity = '0';
+            newSlot.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                newSlot.style.transition = 'all 0.3s';
+                newSlot.style.opacity = '1';
+                newSlot.style.transform = 'translateY(0)';
+            }, 10);
+
+            // Focus on date input
+            newSlot.querySelector('.modal-date-input').focus();
+        }
+
+        function removeModalSlot(button) {
+            const slots = document.querySelectorAll('#modalTimeSlotsContainer .time-slot');
+            if (slots.length > 1) {
+                const slot = button.closest('.time-slot');
+                slot.style.transition = 'all 0.3s';
+                slot.style.opacity = '0';
+                slot.style.transform = 'translateX(-20px)';
+                setTimeout(() => slot.remove(), 300);
+            } else {
+                showToast('Musisz miec przynajmniej jedno okno dostepnosci', 'error');
+            }
+        }
+
+        async function generateSecureHash() {
+            if (window.crypto && window.crypto.getRandomValues) {
+                const array = new Uint8Array(16);
+                window.crypto.getRandomValues(array);
+                return Array.from(array, byte => byte.toString(36)).join('').substring(0, 9);
+            }
+            return Math.random().toString(36).substring(2, 11);
+        }
+
+        function validateModalTimeSlots() {
+            const slots = document.querySelectorAll('#modalTimeSlotsContainer .time-slot');
+            let isValid = true;
+
+            slots.forEach(slot => {
+                const dateInput = slot.querySelector('.modal-date-input');
+                const timeFrom = slot.querySelector('.modal-time-from');
+                const timeTo = slot.querySelector('.modal-time-to');
+
+                // Clear previous errors
+                slot.querySelectorAll('.time-input-group').forEach(g => {
+                    g.classList.remove('has-error');
+                    g.querySelector('.error-message').textContent = '';
+                });
+
+                // Check date
+                if (dateInput.value && dateInput.value < today) {
+                    const group = dateInput.closest('.time-input-group');
+                    group.classList.add('has-error');
+                    group.querySelector('.error-message').textContent = 'Data nie moze byc w przeszlosci';
+                    isValid = false;
+                }
+
+                // Check time range
+                if (timeFrom.value && timeTo.value && timeFrom.value >= timeTo.value) {
+                    const group = timeTo.closest('.time-input-group');
+                    group.classList.add('has-error');
+                    group.querySelector('.error-message').textContent = 'Godzina "do" musi byc pozniejsza';
+                    isValid = false;
+                }
+            });
+
+            return isValid;
+        }
+
+        // Handle modal form submission
+        document.getElementById('scheduleForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('modalSubmitBtn');
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+
+            try {
+                // Validate time slots
+                if (!validateModalTimeSlots()) {
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                    return;
+                }
+
+                // Get form values
+                const title = document.getElementById('modalScheduleTitle').value.trim();
+                const meetingType = document.getElementById('modalMeetingType').value;
+                const assignedUser = document.getElementById('modalAssignedUser').value;
+                const duration = document.querySelector('input[name="modalDuration"]:checked')?.value;
+
+                if (!title || !meetingType || !assignedUser || !duration) {
+                    showToast('Wypelnij wszystkie wymagane pola', 'error');
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                    return;
+                }
+
+                // Collect time slots
+                const timeSlots = [];
+                const slots = document.querySelectorAll('#modalTimeSlotsContainer .time-slot');
+
+                slots.forEach(slot => {
+                    const date = slot.querySelector('.modal-date-input').value;
+                    const timeFrom = slot.querySelector('.modal-time-from').value;
+                    const timeTo = slot.querySelector('.modal-time-to').value;
+
+                    if (date && timeFrom && timeTo) {
+                        timeSlots.push({ date, timeFrom, timeTo });
+                    }
+                });
+
+                if (timeSlots.length === 0) {
+                    showToast('Dodaj przynajmniej jedno okno dostepnosci', 'error');
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                    return;
+                }
+
+                // Sort time slots by date
+                timeSlots.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+                // Generate hash and link
+                const hash = await generateSecureHash();
+                const link = `${MODAL_CONFIG.BASE_URL}${hash}`;
+
+                // Create schedule object
+                const newSchedule = {
+                    id: hash,
+                    hash: hash,
+                    title: title,
+                    meetingType: meetingType,
+                    assignedUser: assignedUser,
+                    duration: parseInt(duration),
+                    timeSlots: timeSlots,
+                    link: link,
+                    createdAt: new Date().toISOString(),
+                    bookings: []
+                };
+
+                // Add to schedules array and save
+                schedules.push(newSchedule);
+                saveSchedules();
+
+                // Close modal and refresh table
+                closeScheduleModal();
+                renderTable();
+                renderCalendar();
+
+                showToast('Harmonogram utworzony pomyslnie', 'success');
+
+            } catch (error) {
+                console.error('Error creating schedule:', error);
+                showToast('Wystapil blad podczas tworzenia harmonogramu', 'error');
+            } finally {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Handle duration chip clicks
+        document.querySelectorAll('.duration-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.duration-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                this.querySelector('input[type="radio"]').checked = true;
+            });
+        });
+
+        // Close modal on overlay click
+        document.getElementById('scheduleModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeScheduleModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('scheduleModalOverlay').classList.contains('show')) {
+                closeScheduleModal();
+            }
+        });
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
+        loadSchedules();
+        renderTable();
+        populateCalendarScheduleFilter();
+        renderCalendar();
+
+        // Initialize modal time selects
+        fillModalTimeSelects(document.getElementById('modalTimeSlotsContainer'));
+    </script>
+</body>
+</html>

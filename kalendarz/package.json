@@ -1,0 +1,34 @@
+{
+  "name": "kalendarz",
+  "version": "1.0.0",
+  "description": "System rezerwacji terminów - appointment booking system",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "format": "prettier --write .",
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "calendar",
+    "booking",
+    "appointments",
+    "scheduling"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "date-fns": "^3.0.6",
+    "validator": "^13.11.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.11",
+    "prettier": "^3.1.1",
+    "eslint": "^8.56.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

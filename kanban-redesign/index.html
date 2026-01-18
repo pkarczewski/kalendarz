@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoxDeveloper CRM - Matrix</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top blue bar -->
+    <div class="top-bar"></div>
+
+    <!-- ========================================
+         HEADER - Nawigacja główna VoxDeveloper
+    ======================================== -->
+    <header class="main-header">
+        <div class="header-left">
+            <div class="logo">
+                <div class="logo-container">
+                    <svg class="logo-icon" viewBox="0 0 50 35" width="50" height="35">
+                        <!-- Stylizowany ptak/skrzydła VoxDeveloper -->
+                        <path d="M25 5 C15 5, 5 15, 5 20 C10 15, 18 12, 25 14 C32 12, 40 15, 45 20 C45 15, 35 5, 25 5" fill="#00A0B0"/>
+                        <path d="M25 14 C18 14, 10 18, 8 25 C15 20, 20 18, 25 20 C30 18, 35 20, 42 25 C40 18, 32 14, 25 14" fill="#00C4B4"/>
+                    </svg>
+                    <div class="logo-text">
+                        <span class="logo-main">VOX<span class="logo-developer">DEVELOPER</span></span>
+                        <span class="logo-sub">CRM</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <a href="#" class="nav-item">Pulpit</a>
+                <a href="#" class="nav-item has-dropdown">Leady <i class="fas fa-chevron-down"></i></a>
+                <a href="#" class="nav-item">Zgłoszenia</a>
+                <a href="#" class="nav-item">Klienci</a>
+                <a href="#" class="nav-item has-dropdown">Wyszukiwarka <i class="fas fa-chevron-down"></i></a>
+                <a href="#" class="nav-item has-dropdown">Kalendarz <i class="fas fa-chevron-down"></i></a>
+                <a href="#" class="nav-item">Rezerwacje</a>
+                <a href="#" class="nav-item has-dropdown">Więcej <i class="fas fa-chevron-down"></i></a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="search-box">
+                <i class="fas fa-plus"></i>
+                <input type="text" placeholder="Wyszukaj klienta">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="user-menu">
+                <span class="user-name">Zalogowany jako<br><strong>Nowak Jan</strong></span>
+                <div class="user-avatar-initials">JN</div>
+                <div class="header-icons">
+                    <span class="icon-btn"><i class="fas fa-comment"></i></span>
+                    <span class="icon-btn"><i class="fas fa-th"></i></span>
+                    <span class="icon-btn notification"><i class="fas fa-bell"></i><span class="badge">3</span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========================================
+         MAIN CONTENT
+    ======================================== -->
+    <main class="main-content">
+
+        <!-- ========================================
+             PAGE HEADER - Tytuł i akcje
+        ======================================== -->
+        <div class="page-header">
+            <div class="page-title">
+                <h1>MATRIX</h1>
+            </div>
+        </div>
+
+        <!-- ========================================
+             FILTERS BAR - Pasek filtrów
+        ======================================== -->
+        <div class="filters-bar">
+            <div class="filters-left">
+                <!-- Filtr: Typ -->
+                <div class="filter-group">
+                    <label>Typ</label>
+                    <select class="filter-select">
+                        <option value="">Klient</option>
+                    </select>
+                </div>
+
+                <!-- Filtr: Status -->
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select class="filter-select">
+                        <option value="">Status 19</option>
+                    </select>
+                </div>
+
+                <!-- Filtr: Data od -->
+                <div class="filter-group">
+                    <label>Data</label>
+                    <input type="date" class="filter-input" value="2025-10-20">
+                </div>
+
+                <!-- Filtr: Data do -->
+                <div class="filter-group">
+                    <label>&nbsp;</label>
+                    <input type="date" class="filter-input" value="2026-01-18">
+                </div>
+
+                <!-- Filtr: Doradca -->
+                <div class="filter-group">
+                    <label>Doradca odpowiedzialny</label>
+                    <select class="filter-select">
+                        <option value="">Doradca</option>
+                    </select>
+                </div>
+
+                <!-- Filtr: Zmiana statusu od -->
+                <div class="filter-group">
+                    <label>Zmiana statusu od</label>
+                    <input type="text" class="filter-input" placeholder="">
+                </div>
+
+                <!-- Filtr: Zmiana statusu do -->
+                <div class="filter-group">
+                    <label>Zmiana statusu do</label>
+                    <input type="text" class="filter-input" placeholder="">
+                </div>
+            </div>
+
+            <div class="filters-right">
+                <!-- Eksport -->
+                <button class="btn btn-export" title="Eksport CSV">
+                    <i class="fas fa-download"></i>
+                </button>
+                <button class="btn btn-export excel" title="Eksport Excel">
+                    <i class="fas fa-table"></i>
+                </button>
+
+                <!-- Przycisk Szukaj -->
+                <button class="btn btn-success">
+                    Szukaj <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Wynik wyszukania -->
+        <div class="search-result">
+            <span>Wynik wyszukania <strong>19</strong></span>
+        </div>
+
+        <!-- ========================================
+             KANBAN BOARD - Tablica Pipedrive Style
+        ======================================== -->
+        <div class="kanban-container">
+            <div class="kanban-board" id="kanbanBoard">
+
+                <!-- KOLUMNA 1: NOWY -->
+                <div class="kanban-column" data-stage="nowy">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <span class="column-indicator" style="background: #2196F3"></span>
+                            <h3>Nowy</h3>
+                            <span class="column-count">1</span>
+                        </div>
+                        <button class="column-menu"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                    <div class="column-body" data-stage="nowy">
+                        <!-- KARTA 1: Nowy lead - gorący, 90% prawdop. -->
+                        <div class="deal-card" data-deal-id="1" draggable="true">
+                            <div class="card-header">
+                                <div class="card-source">
+                                    <span class="source-badge www">WWW</span>
+                                </div>
+                                <button class="card-action-btn"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                            <div class="card-client">
+                                <div class="client-avatar">KK</div>
+                                <div class="client-info">
+                                    <span class="client-name">Kopot Katarzyna</span>
+                                    <div class="client-contact-icons">
+                                        <a href="tel:512345678" class="contact-icon phone" title="Zadzwoń: 512 345 678"><i class="fas fa-phone"></i></a>
+                                        <a href="mailto:k.kopot@email.pl" class="contact-icon email" title="Wyślij email"><i class="fas fa-envelope"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-property">
+                                <span class="property-name">Osiedle Parkowe</span>
+                                <span class="property-unit">M12 • 65m² • 3 pok.</span>
+                                <span class="property-price">485 000 zł</span>
+                            </div>
+                            <!-- Tagi klasyfikacji -->
+                            <div class="card-tags">
+                                <span class="tag prob-90">90%</span>
+                                <span class="tag hot">Gorący</span>
+                                <span class="tag cash">Gotówka</span>
+                                <span class="tag more-tags" onclick="toggleTagsPopup(this)">+2</span>
+                                <!-- Popup z wszystkimi tagami -->
+                                <div class="tags-popup">
+                                    <div class="tags-popup-content">
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Ocena lead'a:</span><span class="tags-popup-value">3/3</span></div>
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Cel zakupu:</span><span class="tags-popup-value">Dla rodziny</span></div>
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Typ osobowości:</span><span class="tags-popup-value">Żółty</span></div>
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Decyzja do:</span><span class="tags-popup-value">Do miesiąca</span></div>
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Status kredytowy:</span><span class="tags-popup-value">Gotówka</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-activity has-activity">
+                                <i class="fas fa-phone"></i>
+                                <span>Telefon: dziś 14:00</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-age fresh"><i class="fas fa-clock"></i> W statusie: 4 dni</div>
+                                <div class="card-advisor-initials green">JN</div>
+                            </div>
+                            <div class="quick-actions">
+                                <button class="qa-btn" title="Zarejestruj aktywność"><i class="fas fa-check-circle"></i></button>
+                                <button class="qa-btn" title="Zaplanuj aktywność"><i class="fas fa-calendar-plus"></i></button>
+                                <button class="qa-btn" title="Wyślij mail"><i class="fas fa-envelope"></i></button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="column-footer">
+                        <button class="add-deal-btn"><i class="fas fa-plus"></i> Dodaj deal</button>
+                    </div>
+                </div>
+
+                <!-- KOLUMNA 2: ZAINTERESOWANY OFERTĄ -->
+                <div class="kanban-column" data-stage="zainteresowany">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <span class="column-indicator" style="background: #00BCD4"></span>
+                            <h3>Zainteresowany ofertą</h3>
+                            <span class="column-count">0</span>
+                        </div>
+                        <button class="column-menu"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                    <div class="column-body" data-stage="zainteresowany">
+                    </div>
+                    <div class="column-footer">
+                        <button class="add-deal-btn"><i class="fas fa-plus"></i> Dodaj deal</button>
+                    </div>
+                </div>
+
+                <!-- KOLUMNA 3: WYSŁANA OFERTA -->
+                <div class="kanban-column" data-stage="wyslana_oferta">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <span class="column-indicator" style="background: #FF9800"></span>
+                            <h3>Wysłana oferta</h3>
+                            <span class="column-count">1</span>
+                        </div>
+                        <button class="column-menu"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                    <div class="column-body" data-stage="wyslana_oferta">
+                        <!-- KARTA 2: Wysłana oferta - ciepły, 30% prawdop., kredyt w trakcie -->
+                        <div class="deal-card" data-deal-id="6" draggable="true">
+                            <div class="card-header">
+                                <div class="card-source">
+                                    <span class="source-badge www">WWW</span>
+                                </div>
+                                <button class="card-action-btn"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                            <div class="card-client">
+                                <div class="client-avatar gold">AK</div>
+                                <div class="client-info">
+                                    <span class="client-name">Adamiak Kamil</span>
+                                    <div class="client-contact-icons">
+                                        <a href="tel:600123456" class="contact-icon phone" title="Zadzwoń: 600 123 456"><i class="fas fa-phone"></i></a>
+                                        <a href="mailto:kamil.adamiak@firma.pl" class="contact-icon email" title="Wyślij email"><i class="fas fa-envelope"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-property">
+                                <span class="property-name">Villa Nova</span>
+                                <span class="property-unit">D1 • 120m² • 4 pok.</span>
+                                <span class="property-price high">960 000 zł</span>
+                            </div>
+                            <!-- Tagi klasyfikacji -->
+                            <div class="card-tags">
+                                <span class="tag prob-30">30%</span>
+                                <span class="tag warm">Ciepły</span>
+                                <span class="tag credit-pending">Wniosek</span>
+                                <span class="tag more-tags" onclick="toggleTagsPopup(this)">+3</span>
+                                <!-- Popup z wszystkimi tagami -->
+                                <div class="tags-popup">
+                                    <div class="tags-popup-content">
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Ocena lead'a:</span><span class="tags-popup-value">2/3</span></div>
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Cel zakupu:</span><span class="tags-popup-value">Klient inwestycyjny</span></div>
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Typ osobowości:</span><span class="tags-popup-value">Czerwony</span></div>
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Decyzja do:</span><span class="tags-popup-value">2-6 miesięcy</span></div>
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Status kredytowy:</span><span class="tags-popup-value">Wniosek złożony</span></div>
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Klient:</span><span class="tags-popup-value">VIP</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-activity has-activity">
+                                <i class="fas fa-phone"></i>
+                                <span>Telefon: dziś 16:00</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-age normal"><i class="fas fa-clock"></i> W statusie: 9 dni</div>
+                                <div class="card-advisor-initials orange">MK</div>
+                            </div>
+                            <div class="quick-actions">
+                                <button class="qa-btn" title="Zarejestruj aktywność"><i class="fas fa-check-circle"></i></button>
+                                <button class="qa-btn" title="Zaplanuj aktywność"><i class="fas fa-calendar-plus"></i></button>
+                                <button class="qa-btn" title="Wyślij mail"><i class="fas fa-envelope"></i></button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="column-footer">
+                        <button class="add-deal-btn"><i class="fas fa-plus"></i> Dodaj deal</button>
+                    </div>
+                </div>
+
+                <!-- KOLUMNA 4: NEGOCJACJE -->
+                <div class="kanban-column" data-stage="negocjacje">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <span class="column-indicator" style="background: #FFC107"></span>
+                            <h3>Negocjacje</h3>
+                            <span class="column-count">0</span>
+                        </div>
+                        <button class="column-menu"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                    <div class="column-body" data-stage="negocjacje">
+                    </div>
+                    <div class="column-footer">
+                        <button class="add-deal-btn"><i class="fas fa-plus"></i> Dodaj deal</button>
+                    </div>
+                </div>
+
+                <!-- KOLUMNA 5: REZERWACJA USTNA -->
+                <div class="kanban-column" data-stage="rezerwacja_ustna">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <span class="column-indicator" style="background: #9C27B0"></span>
+                            <h3>Rezerwacja ustna</h3>
+                            <span class="column-count">0</span>
+                        </div>
+                        <button class="column-menu"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                    <div class="column-body" data-stage="rezerwacja_ustna">
+                    </div>
+                    <div class="column-footer">
+                        <button class="add-deal-btn"><i class="fas fa-plus"></i> Dodaj deal</button>
+                    </div>
+                </div>
+
+                <!-- KOLUMNA 6: UMOWA REZERWACYJNA -->
+                <div class="kanban-column" data-stage="umowa_rezerwacyjna">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <span class="column-indicator" style="background: #673AB7"></span>
+                            <h3>Umowa rezerwacyjna</h3>
+                            <span class="column-count">1</span>
+                        </div>
+                        <button class="column-menu"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                    <div class="column-body" data-stage="umowa_rezerwacyjna">
+                        <!-- KARTA 3: Umowa rezerwacyjna - zimny, 90%, kredyt zatwierdzony -->
+                        <div class="deal-card success" data-deal-id="9" draggable="true">
+                            <div class="card-header">
+                                <div class="card-source">
+                                    <span class="source-badge polecenie">Polecenie</span>
+                                </div>
+                                <button class="card-action-btn"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                            <div class="card-client">
+                                <div class="client-avatar green">LP</div>
+                                <div class="client-info">
+                                    <span class="client-name">Lewandowski Patryk</span>
+                                    <div class="client-contact-icons">
+                                        <a href="tel:509666777" class="contact-icon phone" title="Zadzwoń: 509 666 777"><i class="fas fa-phone"></i></a>
+                                        <a href="mailto:patryk.lew@gmail.com" class="contact-icon email" title="Wyślij email"><i class="fas fa-envelope"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-property">
+                                <span class="property-name">Rezydencja Zielona</span>
+                                <span class="property-unit">Z8 • 82m² • 3 pok.</span>
+                                <span class="property-price">650 000 zł</span>
+                            </div>
+                            <!-- Tagi klasyfikacji -->
+                            <div class="card-tags">
+                                <span class="tag prob-90">90%</span>
+                                <span class="tag cold">Zimny</span>
+                                <span class="tag credit-ok">Kredyt OK</span>
+                                <span class="tag more-tags" onclick="toggleTagsPopup(this)">+2</span>
+                                <!-- Popup z wszystkimi tagami -->
+                                <div class="tags-popup">
+                                    <div class="tags-popup-content">
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Ocena lead'a:</span><span class="tags-popup-value">3/3</span></div>
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Cel zakupu:</span><span class="tags-popup-value">Dla siebie</span></div>
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Typ osobowości:</span><span class="tags-popup-value">Niebieski</span></div>
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Decyzja do:</span><span class="tags-popup-value">Powyżej 6 mies.</span></div>
+                                        <div class="tags-popup-row"><span class="tags-popup-label">Status kredytowy:</span><span class="tags-popup-value">Decyzja pozytywna</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-activity has-activity">
+                                <i class="fas fa-calendar"></i>
+                                <span>Spotkanie: 20.01, 13:30</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-age success"><i class="fas fa-check-circle"></i> W statusie: 32 dni</div>
+                                <div class="card-advisor-initials green">LP</div>
+                            </div>
+                            <div class="quick-actions">
+                                <button class="qa-btn" title="Zarejestruj aktywność"><i class="fas fa-check-circle"></i></button>
+                                <button class="qa-btn" title="Zaplanuj aktywność"><i class="fas fa-calendar-plus"></i></button>
+                                <button class="qa-btn" title="Wyślij mail"><i class="fas fa-envelope"></i></button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="column-footer">
+                        <button class="add-deal-btn"><i class="fas fa-plus"></i> Dodaj deal</button>
+                    </div>
+                </div>
+
+                <!-- KOLUMNA 7: UMOWA DEWELOPERSKA -->
+                <div class="kanban-column" data-stage="umowa_deweloperska">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <span class="column-indicator" style="background: #4CAF50"></span>
+                            <h3>Umowa deweloperska</h3>
+                            <span class="column-count">0</span>
+                        </div>
+                        <button class="column-menu"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                    <div class="column-body" data-stage="umowa_deweloperska">
+                    </div>
+                    <div class="column-footer">
+                        <button class="add-deal-btn"><i class="fas fa-plus"></i> Dodaj deal</button>
+                    </div>
+                </div>
+
+                <!-- KOLUMNA 8: UMOWA PRZEDWSTĘPNA -->
+                <div class="kanban-column" data-stage="umowa_przedwstepna">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <span class="column-indicator" style="background: #388E3C"></span>
+                            <h3>Umowa przedwstępna</h3>
+                            <span class="column-count">0</span>
+                        </div>
+                        <button class="column-menu"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                    <div class="column-body" data-stage="umowa_przedwstepna">
+                    </div>
+                    <div class="column-footer">
+                        <button class="add-deal-btn"><i class="fas fa-plus"></i> Dodaj deal</button>
+                    </div>
+                </div>
+
+                <!-- KOLUMNA 9: OBSŁUGA POSPRZEDAŻOWA -->
+                <div class="kanban-column" data-stage="obsluga_posprzedazowa">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <span class="column-indicator" style="background: #009688"></span>
+                            <h3>Obsługa posprzedażowa</h3>
+                            <span class="column-count">0</span>
+                        </div>
+                        <button class="column-menu"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                    <div class="column-body" data-stage="obsluga_posprzedazowa">
+                    </div>
+                    <div class="column-footer">
+                        <button class="add-deal-btn"><i class="fas fa-plus"></i> Dodaj deal</button>
+                    </div>
+                </div>
+
+                <!-- KOLUMNA 10: ZAKOŃCZONY -->
+                <div class="kanban-column collapsed" data-stage="zakonczony">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <span class="column-indicator" style="background: #607D8B"></span>
+                            <h3>Zakończony</h3>
+                            <span class="column-count">0</span>
+                        </div>
+                        <button class="column-expand"><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ========================================
+         MODAL: Quick Actions Menu
+    ======================================== -->
+    <div class="modal-overlay" id="quickActionsModal" style="display: none;">
+        <div class="modal-content quick-actions-modal">
+            <div class="modal-header">
+                <h3>Szybkie akcje</h3>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="quick-action-grid">
+                    <button class="quick-action-item">
+                        <i class="fas fa-phone"></i>
+                        <span>Zadzwoń</span>
+                    </button>
+                    <button class="quick-action-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>Wyślij email</span>
+                    </button>
+                    <button class="quick-action-item">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Wyślij ofertę</span>
+                    </button>
+                    <button class="quick-action-item">
+                        <i class="fas fa-calendar-plus"></i>
+                        <span>Zaplanuj aktywność</span>
+                    </button>
+                    <button class="quick-action-item">
+                        <i class="fas fa-sticky-note"></i>
+                        <span>Dodaj notatkę</span>
+                    </button>
+                    <button class="quick-action-item">
+                        <i class="fas fa-file-contract"></i>
+                        <span>Generuj umowę</span>
+                    </button>
+                    <button class="quick-action-item">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Zmień etap</span>
+                    </button>
+                    <button class="quick-action-item">
+                        <i class="fas fa-user"></i>
+                        <span>Karta klienta</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+         TOAST NOTIFICATIONS
+    ======================================== -->
+    <div class="toast-container" id="toastContainer">
+        <!-- Toasty będą dodawane dynamicznie -->
+    </div>
+
+    <!-- ========================================
+         FOOTER
+    ======================================== -->
+    <footer class="main-footer">
+        <span>2026 VoxDeveloper CRM</span>
+        <span class="version">v5.0 2022-10-04<br>dt 2026-01-18</span>
+    </footer>
+
+    <script src="kanban.js"></script>
+    <script>
+        // Toggle popup z tagami klasyfikacji
+        function toggleTagsPopup(element) {
+            const card = element.closest('.deal-card');
+            const popup = card.querySelector('.tags-popup');
+
+            // Zamknij wszystkie inne popupy
+            document.querySelectorAll('.tags-popup.show').forEach(p => {
+                if (p !== popup) p.classList.remove('show');
+            });
+
+            // Toggle aktualny popup
+            popup.classList.toggle('show');
+
+            // Zamknij popup po kliknięciu poza nim
+            if (popup.classList.contains('show')) {
+                setTimeout(() => {
+                    document.addEventListener('click', function closePopup(e) {
+                        if (!popup.contains(e.target) && e.target !== element) {
+                            popup.classList.remove('show');
+                            document.removeEventListener('click', closePopup);
+                        }
+                    });
+                }, 10);
+            }
+        }
+    </script>
+</body>
+</html>

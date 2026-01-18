@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utwórz harmonogram</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 4px;
+            padding: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .back-link {
+            color: #2196F3;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h1::before {
+            content: "✓";
+            color: #7cb342;
+            font-size: 20px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        
+        .close-btn:hover {
+            color: #666;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            color: #555;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        
+        .required {
+            color: #e74c3c;
+        }
+        
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 14px;
+            background: #f5f5f5;
+            color: #333;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #999;
+            background: white;
+        }
+        
+        .duration-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .duration-chip {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            background: #f5f5f5;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .duration-chip:hover {
+            border-color: #bbb;
+            background: #e8e8e8;
+        }
+        
+        .duration-chip.active {
+            background: #7cb342;
+            border-color: #7cb342;
+            color: white;
+        }
+        
+        .duration-chip input[type="radio"] {
+            display: none;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+            margin: 25px 0 15px 0;
+        }
+        
+        .time-slots-container {
+            background: #fafafa;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            padding: 20px;
+        }
+        
+        .time-slot {
+            display: grid;
+            grid-template-columns: 200px 100px 100px 40px;
+            gap: 12px;
+            align-items: end;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 3px;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .time-input-group {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .time-input-group label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .time-input-group select,
+        .time-input-group input {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 13px;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .time-input-group select:focus,
+        .time-input-group input:focus {
+            outline: none;
+            border-color: #999;
+            background: white;
+        }
+
+        .time-input-group select.error,
+        .time-input-group input.error {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+
+        .time-input-group .error-message {
+            font-size: 11px;
+            color: #e74c3c;
+            position: absolute;
+            bottom: -18px;
+            left: 0;
+            white-space: nowrap;
+            display: none;
+        }
+
+        .time-input-group.has-error .error-message {
+            display: block;
+        }
+
+        .time-slot {
+            margin-bottom: 28px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-add {
+            background: white;
+            color: #333;
+            border: 1px dashed #ccc;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn-add:hover {
+            border-color: #999;
+            background: #fafafa;
+        }
+        
+        .btn-remove {
+            background: #f5f5f5;
+            color: #999;
+            width: 36px;
+            height: 36px;
+            border-radius: 3px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .btn-remove:hover {
+            background: #fee;
+            color: #e74c3c;
+            border-color: #e74c3c;
+        }
+        
+        .footer-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e5e5;
+        }
+        
+        .btn-cancel {
+            background: #e5e5e5;
+            color: #666;
+            padding: 10px 24px;
+        }
+        
+        .btn-cancel:hover {
+            background: #d5d5d5;
+        }
+        
+        .btn-submit {
+            background: #7cb342;
+            color: white;
+            padding: 10px 24px;
+        }
+        
+        .btn-submit:hover {
+            background: #689f38;
+        }
+        
+        .info-box {
+            background: #f0f7ff;
+            border: 1px solid #d4e7ff;
+            border-left: 3px solid #2196F3;
+            padding: 12px 15px;
+            border-radius: 3px;
+            margin: 20px 0;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #555;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f0f9ff;
+            border: 1px solid #b3e0ff;
+            border-left: 3px solid #7cb342;
+            border-radius: 3px;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .result h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .result-item {
+            padding: 10px;
+            background: white;
+            margin-bottom: 8px;
+            border-radius: 3px;
+            font-size: 13px;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .result-item strong {
+            color: #7cb342;
+        }
+        
+        .link-display {
+            background: white;
+            padding: 12px;
+            border-radius: 3px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #333;
+            word-break: break-all;
+            border: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .link-display-text {
+            flex: 1;
+        }
+
+        .btn-copy {
+            background: #7cb342;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .btn-copy:hover {
+            background: #689f38;
+        }
+
+        .btn-copy:active {
+            background: #558b2f;
+        }
+
+        .btn-copy.copied {
+            background: #4caf50;
+        }
+
+        .result-actions {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #d4e7ff;
+        }
+
+        .btn-back {
+            display: inline-block;
+            background: #2196F3;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .btn-back:hover {
+            background: #1976D2;
+        }
+
+        /* Temporary message (replaces alert()) */
+        .temp-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff3f3;
+            border: 1px solid #f2c0c0;
+            color: #7a1b1b;
+            padding: 10px 14px;
+            border-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            z-index: 9999;
+            font-size: 13px;
+        }
+
+        .temp-message.info {
+            background: #f0f7ff;
+            border-color: #cfe8ff;
+            color: #0b4f8a;
+        }
+
+        .temp-message.success {
+            background: #f0f9f0;
+            border-color: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #333;
+        }
+
+        .modal-content {
+            margin-bottom: 20px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-btn-primary {
+            background: #7cb342;
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            background: #689f38;
+        }
+
+        .modal-btn-secondary {
+            background: #e5e5e5;
+            color: #666;
+        }
+
+        .modal-btn-secondary:hover {
+            background: #d5d5d5;
+        }
+
+        /* Loading state */
+        .btn-submit.loading {
+            position: relative;
+            color: transparent;
+            pointer-events: none;
+        }
+
+        .btn-submit.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Focus styles for keyboard users */
+        .duration-chip:focus {
+            outline: 3px solid rgba(124,179,66,0.25);
+        }
+
+        .close-btn:focus,
+        .btn:focus,
+        .form-input:focus,
+        .form-select:focus {
+            outline: 2px solid rgba(124,179,66,0.5);
+            outline-offset: 2px;
+        }
+        
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .time-slot {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .container {
+                padding: 20px;
+            }
+            .link-display {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn-copy {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="index.html" class="back-link">← Strona główna</a>
+            <h1>Utwórz harmonogram</h1>
+        </div>
+
+        <form id="scheduleForm">
+            <!-- Nazwa harmonogramu -->
+            <div class="form-group">
+                <label class="form-label">Nazwa harmonogramu <span class="required">*</span></label>
+                <input 
+                    type="text" 
+                    class="form-input" 
+                    id="scheduleTitle"
+                    placeholder="np. Spotkanie w sprawie odbioru lokalu"
+                    required
+                    aria-required="true"
+                    aria-describedby="scheduleTitleDesc"
+                >
+                <div id="scheduleTitleDesc" class="sr-only">Wprowadź nazwę harmonogramu</div>
+            </div>
+
+            <!-- Typ spotkania i przypisanie -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Typ spotkania</label>
+                    <select class="form-select" id="meetingType" required aria-required="true" aria-label="Typ spotkania">
+                        <option value="">Wybierz typ...</option>
+                        <option value="odbiór">Odbiór lokalu</option>
+                        <option value="umowa">Podpisanie umowy</option>
+                        <option value="spotkanie">Spotkanie handlowe</option>
+                        <option value="inne">Inne</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Przypisany do</label>
+                    <select class="form-select" id="assignedUser" required aria-required="true" aria-label="Przypisany do">
+                        <option value="">Wybierz osobę...</option>
+                        <option value="1">Kowalski Jan</option>
+                        <option value="2">Nowak Anna</option>
+                        <option value="3">Wiśniewski Piotr</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Czas trwania -->
+            <div class="form-group">
+                <label class="form-label">Czas trwania spotkania <span class="required">*</span></label>
+                <div class="duration-options" role="radiogroup" aria-label="Czas trwania spotkania">
+                    <label class="duration-chip">
+                        <input type="radio" name="duration" value="30" aria-label="30 minut">
+                        <span>30 min</span>
+                    </label>
+                    <label class="duration-chip active">
+                        <input type="radio" name="duration" value="60" checked aria-label="1 godzina">
+                        <span>1 godz.</span>
+                    </label>
+                    <label class="duration-chip">
+                        <input type="radio" name="duration" value="90" aria-label="1,5 godziny">
+                        <span>1,5 godz.</span>
+                    </label>
+                    <label class="duration-chip">
+                        <input type="radio" name="duration" value="120" aria-label="2 godziny">
+                        <span>2 godz.</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Okna dostępności -->
+            <div class="section-title">Okna dostępności</div>
+            
+            <div class="time-slots-container">
+                <div id="timeSlotsContainer">
+                    <!-- Pierwszy slot -->
+                    <div class="time-slot">
+                        <div class="time-input-group">
+                            <label for="date-0">Data</label>
+                            <input type="date" class="date-input" id="date-0" required aria-required="true" aria-label="Data okna dostępności">
+                            <div class="error-message"></div>
+                        </div>
+                        <div class="time-input-group">
+                            <label for="time-from-0">od</label>
+                            <select class="time-from" id="time-from-0" required aria-required="true" aria-label="Godzina rozpoczęcia"></select>
+                            <div class="error-message"></div>
+                        </div>
+                        <div class="time-input-group">
+                            <label for="time-to-0">do</label>
+                            <select class="time-to" id="time-to-0" required aria-required="true" aria-label="Godzina zakończenia"></select>
+                            <div class="error-message"></div>
+                        </div>
+                        <button type="button" class="btn btn-remove" onclick="removeSlot(this)" title="Usuń" aria-label="Usuń okno dostępności">×</button>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-add" onclick="addSlot()" aria-label="Dodaj kolejne okno dostępności">+ Dodaj kolejne okno</button>
+            </div>
+
+            <div class="info-box">
+                <strong>💡 Wskazówka:</strong> Dodaj kilka okien dostępności, aby zwiększyć szanse na znalezienie odpowiedniego terminu. Możesz dodać okna w różnych dniach i godzinach.
+            </div>
+
+            <!-- Przyciski -->
+            <div class="footer-buttons">
+                <button type="button" class="btn btn-cancel" onclick="resetForm()" aria-label="Zamknij formularz">Zamknij</button>
+                <button type="submit" class="btn btn-submit" aria-label="Zapisz harmonogram">Zapisz</button>
+            </div>
+        </form>
+
+        <div id="result" class="result">
+            <h3>✓ Harmonogram został utworzony pomyślnie!</h3>
+            <div id="resultContent"></div>
+            <div class="link-display" id="generatedLink">
+                <div class="link-display-text"></div>
+                <button class="btn-copy" id="copyLinkBtn" aria-label="Kopiuj link">Kopiuj</button>
+            </div>
+            <div class="result-actions">
+                <a href="index.html" class="btn btn-back">← Wróć do strony głównej</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="confirmModal" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
+        <div class="modal">
+            <div class="modal-title" id="modalTitle">Potwierdzenie</div>
+            <div class="modal-content" id="modalContent"></div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-secondary" id="modalCancel">Anuluj</button>
+                <button class="modal-btn modal-btn-primary" id="modalConfirm">Potwierdź</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== CONSTANTS ==========
+        const CONFIG = {
+            MEETING_TYPES: [
+                { value: 'odbiór', label: 'Odbiór lokalu' },
+                { value: 'umowa', label: 'Podpisanie umowy' },
+                { value: 'spotkanie', label: 'Spotkanie handlowe' },
+                { value: 'inne', label: 'Inne' }
+            ],
+            USERS: [
+                { id: '1', name: 'Kowalski Jan' },
+                { id: '2', name: 'Nowak Anna' },
+                { id: '3', name: 'Wiśniewski Piotr' }
+            ],
+            TIME_START: 7,
+            TIME_END: 21,
+            TIME_INTERVAL: 30,
+            DEFAULT_TIME_FROM: '09:00',
+            DEFAULT_TIME_TO: '17:00',
+            BASE_URL: new URL('wybor_terminu_20251017.html', window.location.href).href + '?schedule='
+        };
+
+        const ERROR_MESSAGES = {
+            MIN_SLOTS: 'Musisz mieć przynajmniej jedno okno dostępności!',
+            INVALID_TIME_RANGE: 'Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia!',
+            OVERLAPPING_SLOTS: 'Okna dostępności nie mogą się nakładać!',
+            PAST_DATE: 'Data nie może być w przeszłości!',
+            INVALID_INPUT: 'Nieprawidłowe dane wejściowe'
+        };
+
+        // ========== INITIALIZATION ==========
+        const today = new Date().toISOString().split('T')[0];
+        let slotCounter = 1;
+        let timeOptionsCache = null;
+        let modalResolve = null;
+
+        // ========== UTILITY FUNCTIONS ==========
+        
+        /**
+         * Sanitize user input to prevent XSS
+         */
+        function sanitizeInput(str) {
+            if (typeof str !== 'string') return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        /**
+         * Create text node safely
+         */
+        function createTextNode(text) {
+            return document.createTextNode(String(text));
+        }
+
+        /**
+         * Show temporary message
+         */
+        function showMessage(message, type = 'error') {
+            const msg = document.createElement('div');
+            msg.className = `temp-message ${type}`;
+            msg.textContent = message;
+            msg.setAttribute('role', 'alert');
+            document.body.appendChild(msg);
+            
+            setTimeout(() => {
+                msg.style.transition = 'opacity 0.3s';
+                msg.style.opacity = '0';
+                setTimeout(() => msg.remove(), 300);
+            }, 3000);
+        }
+
+        /**
+         * Show modal and return promise
+         */
+        function showModal(title, content) {
+            return new Promise((resolve) => {
+                modalResolve = resolve;
+                const modal = document.getElementById('confirmModal');
+                const modalTitle = document.getElementById('modalTitle');
+                const modalContent = document.getElementById('modalContent');
+                
+                modalTitle.textContent = title;
+                modalContent.textContent = content;
+                modal.classList.add('show');
+                modal.setAttribute('aria-hidden', 'false');
+                
+                // Focus first button
+                document.getElementById('modalConfirm').focus();
+            });
+        }
+
+        /**
+         * Hide modal
+         */
+        function hideModal() {
+            const modal = document.getElementById('confirmModal');
+            modal.classList.remove('show');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        /**
+         * Generate secure hash using crypto API
+         */
+        async function generateSecureHash() {
+            if (window.crypto && window.crypto.getRandomValues) {
+                const array = new Uint8Array(16);
+                window.crypto.getRandomValues(array);
+                return Array.from(array, byte => byte.toString(36)).join('').substring(0, 9);
+            }
+            // Fallback for older browsers
+            return Math.random().toString(36).substring(2, 11);
+        }
+
+        /**
+         * Generate time options (cached)
+         */
+        function generateTimeOptions() {
+            if (timeOptionsCache) return timeOptionsCache;
+            
+            const options = [];
+            for (let h = CONFIG.TIME_START; h <= CONFIG.TIME_END; h++) {
+                for (let m = 0; m < 60; m += CONFIG.TIME_INTERVAL) {
+                    const hour = h.toString().padStart(2, '0');
+                    const minute = m.toString().padStart(2, '0');
+                    options.push(`${hour}:${minute}`);
+                    if (h === CONFIG.TIME_END && m === 0) break;
+                }
+            }
+            timeOptionsCache = options;
+            return options;
+        }
+
+        /**
+         * Validate time range in a slot
+         */
+        function validateTimeRange(slot) {
+            const timeFrom = slot.querySelector('.time-from').value;
+            const timeTo = slot.querySelector('.time-to').value;
+            const date = slot.querySelector('.date-input').value;
+            const group = slot.querySelector('.time-input-group');
+            
+            // Clear previous errors
+            slot.querySelectorAll('.time-input-group').forEach(g => {
+                g.classList.remove('has-error');
+                g.querySelectorAll('.error-message').forEach(msg => {
+                    msg.textContent = '';
+                });
+                g.querySelectorAll('select, input').forEach(el => {
+                    el.classList.remove('error');
+                });
+            });
+
+            let isValid = true;
+
+            // Check if date is in the past
+            if (date && date < today) {
+                const dateGroup = slot.querySelector('.time-input-group');
+                dateGroup.classList.add('has-error');
+                dateGroup.querySelector('.date-input').classList.add('error');
+                dateGroup.querySelector('.error-message').textContent = ERROR_MESSAGES.PAST_DATE;
+                isValid = false;
+            }
+
+            // Check time range
+            if (timeFrom && timeTo && timeFrom >= timeTo) {
+                const toGroup = slot.querySelectorAll('.time-input-group')[2];
+                toGroup.classList.add('has-error');
+                toGroup.querySelector('.time-to').classList.add('error');
+                toGroup.querySelector('.error-message').textContent = ERROR_MESSAGES.INVALID_TIME_RANGE;
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        /**
+         * Check for overlapping time slots
+         */
+        function checkOverlappingSlots() {
+            const slots = Array.from(document.querySelectorAll('.time-slot'));
+            const slotData = slots.map(slot => ({
+                element: slot,
+                date: slot.querySelector('.date-input').value,
+                timeFrom: slot.querySelector('.time-from').value,
+                timeTo: slot.querySelector('.time-to').value
+            })).filter(s => s.date && s.timeFrom && s.timeTo);
+
+            for (let i = 0; i < slotData.length; i++) {
+                for (let j = i + 1; j < slotData.length; j++) {
+                    const slot1 = slotData[i];
+                    const slot2 = slotData[j];
+
+                    // Only check overlaps on same date
+                    if (slot1.date === slot2.date) {
+                        const start1 = slot1.timeFrom;
+                        const end1 = slot1.timeTo;
+                        const start2 = slot2.timeFrom;
+                        const end2 = slot2.timeTo;
+
+                        // Check if they overlap
+                        if ((start1 < end2 && end1 > start2)) {
+                            return { hasOverlap: true, slot1: slot1.element, slot2: slot2.element };
+                        }
+                    }
+                }
+            }
+
+            return { hasOverlap: false };
+        }
+
+        /**
+         * Fill time selects with options
+         */
+        function fillTimeSelects(container) {
+            const timeOptions = generateTimeOptions();
+            const selectsFrom = container.querySelectorAll('.time-from');
+            const selectsTo = container.querySelectorAll('.time-to');
+            
+            selectsFrom.forEach(select => {
+                select.innerHTML = '';
+                timeOptions.forEach(time => {
+                    const option = document.createElement('option');
+                    option.value = time;
+                    option.textContent = time;
+                    if (time === CONFIG.DEFAULT_TIME_FROM) option.selected = true;
+                    select.appendChild(option);
+                });
+            });
+
+            selectsTo.forEach(select => {
+                select.innerHTML = '';
+                timeOptions.forEach(time => {
+                    const option = document.createElement('option');
+                    option.value = time;
+                    option.textContent = time;
+                    if (time === CONFIG.DEFAULT_TIME_TO) option.selected = true;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        /**
+         * Add real-time validation listeners to a slot
+         */
+        function addValidationListeners(slot) {
+            const dateInput = slot.querySelector('.date-input');
+            const timeFrom = slot.querySelector('.time-from');
+            const timeTo = slot.querySelector('.time-to');
+
+            [dateInput, timeFrom, timeTo].forEach(input => {
+                input.addEventListener('change', () => {
+                    validateTimeRange(slot);
+                    // Also check for overlaps
+                    const overlap = checkOverlappingSlots();
+                    if (overlap.hasOverlap) {
+                        showMessage(ERROR_MESSAGES.OVERLAPPING_SLOTS, 'error');
+                    }
+                });
+
+                input.addEventListener('blur', () => {
+                    validateTimeRange(slot);
+                });
+            });
+        }
+
+        // ========== MAIN FUNCTIONS ==========
+
+        function addSlot() {
+            const container = document.getElementById('timeSlotsContainer');
+            const newSlot = document.createElement('div');
+            newSlot.className = 'time-slot';
+            
+            const dateId = `date-${slotCounter}`;
+            const fromId = `time-from-${slotCounter}`;
+            const toId = `time-to-${slotCounter}`;
+            
+            newSlot.innerHTML = `
+                <div class="time-input-group">
+                    <label for="${dateId}">Data</label>
+                    <input type="date" class="date-input" id="${dateId}" min="${today}" required aria-required="true" aria-label="Data okna dostępności">
+                    <div class="error-message"></div>
+                </div>
+                <div class="time-input-group">
+                    <label for="${fromId}">od</label>
+                    <select class="time-from" id="${fromId}" required aria-required="true" aria-label="Godzina rozpoczęcia"></select>
+                    <div class="error-message"></div>
+                </div>
+                <div class="time-input-group">
+                    <label for="${toId}">do</label>
+                    <select class="time-to" id="${toId}" required aria-required="true" aria-label="Godzina zakończenia"></select>
+                    <div class="error-message"></div>
+                </div>
+                <button type="button" class="btn btn-remove" onclick="removeSlot(this)" title="Usuń" aria-label="Usuń okno dostępności">×</button>
+            `;
+            
+            container.appendChild(newSlot);
+            fillTimeSelects(newSlot);
+            addValidationListeners(newSlot);
+            slotCounter++;
+            
+            // Focus on date input
+            newSlot.querySelector('.date-input').focus();
+            
+            // Animation
+            newSlot.style.opacity = '0';
+            newSlot.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                newSlot.style.transition = 'all 0.3s';
+                newSlot.style.opacity = '1';
+                newSlot.style.transform = 'translateY(0)';
+            }, 10);
+        }
+
+        function removeSlot(button) {
+            const slots = document.querySelectorAll('.time-slot');
+            if (slots.length > 1) {
+                const slot = button.closest('.time-slot');
+                slot.style.transition = 'all 0.3s';
+                slot.style.opacity = '0';
+                slot.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    slot.remove();
+                    // Re-validate remaining slots
+                    document.querySelectorAll('.time-slot').forEach(s => validateTimeRange(s));
+                }, 300);
+            } else {
+                showMessage(ERROR_MESSAGES.MIN_SLOTS, 'error');
+            }
+        }
+
+        async function resetForm() {
+            const confirmed = await showModal(
+                'Potwierdzenie',
+                'Czy na pewno chcesz zamknąć? Niezapisane zmiany zostaną utracone.'
+            );
+            
+            if (confirmed) {
+                document.getElementById('scheduleForm').reset();
+                document.getElementById('result').classList.remove('show');
+                
+                // Reset slots to one
+                const container = document.getElementById('timeSlotsContainer');
+                const slots = container.querySelectorAll('.time-slot');
+                for (let i = 1; i < slots.length; i++) {
+                    slots[i].remove();
+                }
+                slotCounter = 1;
+                
+                // Reset first slot
+                fillTimeSelects(document);
+                document.querySelectorAll('.date-input').forEach(input => {
+                    input.min = today;
+                    input.value = '';
+                });
+            }
+        }
+
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                const btn = document.getElementById('copyLinkBtn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Skopiowano!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+                showMessage('Link został skopiowany do schowka', 'success');
+            } catch (err) {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showMessage('Link został skopiowany do schowka', 'success');
+                } catch (e) {
+                    showMessage('Nie udało się skopiować linku', 'error');
+                }
+                document.body.removeChild(textarea);
+            }
+        }
+
+        document.getElementById('scheduleForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.querySelector('.btn-submit');
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            
+            try {
+                // Get form values with sanitization
+                const title = sanitizeInput(document.getElementById('scheduleTitle').value.trim());
+                const meetingType = document.getElementById('meetingType').value;
+                const assignedUserSelect = document.getElementById('assignedUser');
+                const assignedUser = assignedUserSelect.selectedOptions[0] ? 
+                    sanitizeInput(assignedUserSelect.selectedOptions[0].text) : '';
+                const duration = document.querySelector('input[name="duration"]:checked')?.value;
+                
+                // Validate inputs
+                if (!title || !meetingType || !assignedUser || !duration) {
+                    showMessage(ERROR_MESSAGES.INVALID_INPUT, 'error');
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                    return;
+                }
+                
+                const timeSlots = [];
+                const slots = document.querySelectorAll('.time-slot');
+                
+                let isValid = true;
+                
+                // Validate all slots
+                slots.forEach((slot, index) => {
+                    if (!validateTimeRange(slot)) {
+                        isValid = false;
+                        showMessage(`Błąd w przedziale ${index + 1}: ${ERROR_MESSAGES.INVALID_TIME_RANGE}`, 'error');
+                    }
+                });
+                
+                // Check for overlaps
+                const overlap = checkOverlappingSlots();
+                if (overlap.hasOverlap) {
+                    isValid = false;
+                    showMessage(ERROR_MESSAGES.OVERLAPPING_SLOTS, 'error');
+                }
+                
+                if (!isValid) {
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                    return;
+                }
+                
+                // Collect time slots
+                slots.forEach((slot) => {
+                    const date = slot.querySelector('.date-input').value;
+                    const timeFrom = slot.querySelector('.time-from').value;
+                    const timeTo = slot.querySelector('.time-to').value;
+                    
+                    if (date && timeFrom && timeTo) {
+                        timeSlots.push({ date, timeFrom, timeTo });
+                    }
+                });
+                
+                if (timeSlots.length === 0) {
+                    showMessage('Musisz dodać przynajmniej jedno okno dostępności', 'error');
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                    return;
+                }
+                
+                // Sort by date
+                timeSlots.sort((a, b) => new Date(a.date) - new Date(b.date));
+                
+                // Generate secure hash
+                const hash = await generateSecureHash();
+                const link = `${CONFIG.BASE_URL}${hash}`;
+                
+                // Prepare schedule data
+                const scheduleData = {
+                    id: hash,
+                    hash: hash,
+                    title: title,
+                    meetingType: meetingType,
+                    assignedUser: assignedUser,
+                    duration: duration,
+                    timeSlots: timeSlots,
+                    link: link
+                };
+                
+                await displayResults(scheduleData);
+                
+                console.log('Harmonogram:', { title, meetingType, assignedUser, duration, timeSlots, link });
+            } catch (error) {
+                showMessage('Wystąpił błąd podczas zapisywania harmonogramu', 'error');
+                console.error('Error:', error);
+            } finally {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
+        });
+
+        /**
+         * Save schedule to localStorage
+         */
+        function saveSchedule(scheduleData) {
+            try {
+                // Get existing schedules
+                const existingSchedules = JSON.parse(localStorage.getItem('schedules') || '[]');
+                
+                // Add new schedule
+                const newSchedule = {
+                    id: scheduleData.id || scheduleData.hash,
+                    hash: scheduleData.hash,
+                    title: scheduleData.title,
+                    meetingType: scheduleData.meetingType,
+                    assignedUser: scheduleData.assignedUser,
+                    duration: parseInt(scheduleData.duration),
+                    timeSlots: scheduleData.timeSlots,
+                    link: scheduleData.link,
+                    createdAt: new Date().toISOString()
+                };
+                
+                existingSchedules.push(newSchedule);
+                
+                // Save back to localStorage
+                localStorage.setItem('schedules', JSON.stringify(existingSchedules));
+                
+                return true;
+            } catch (error) {
+                console.error('Błąd zapisu harmonogramu:', error);
+                return false;
+            }
+        }
+
+        function displayResults(data) {
+            const resultDiv = document.getElementById('result');
+            const resultContent = document.getElementById('resultContent');
+            const linkDisplayText = document.querySelector('.link-display-text');
+            const copyBtn = document.getElementById('copyLinkBtn');
+            
+            // Save schedule to localStorage
+            const saved = saveSchedule(data);
+            if (!saved) {
+                showMessage('Uwaga: Harmonogram został utworzony, ale wystąpił problem z zapisem', 'error');
+            }
+            
+            // Clear previous content
+            resultContent.innerHTML = '';
+            
+            // Create info section safely
+            const info = document.createElement('div');
+            info.className = 'result-item';
+            
+            const infoStrong1 = document.createElement('strong');
+            infoStrong1.textContent = 'Nazwa: ';
+            const infoText1 = createTextNode(data.title);
+            const infoBr1 = document.createElement('br');
+            
+            const infoStrong2 = document.createElement('strong');
+            infoStrong2.textContent = 'Typ: ';
+            const infoText2 = createTextNode(data.meetingType);
+            const infoBr2 = document.createElement('br');
+            
+            const infoStrong3 = document.createElement('strong');
+            infoStrong3.textContent = 'Przypisany do: ';
+            const infoText3 = createTextNode(data.assignedUser);
+            const infoBr3 = document.createElement('br');
+            
+            const infoStrong4 = document.createElement('strong');
+            infoStrong4.textContent = 'Czas trwania: ';
+            const infoText4 = createTextNode(`${data.duration} minut`);
+            
+            info.appendChild(infoStrong1);
+            info.appendChild(infoText1);
+            info.appendChild(infoBr1);
+            info.appendChild(infoStrong2);
+            info.appendChild(infoText2);
+            info.appendChild(infoBr2);
+            info.appendChild(infoStrong3);
+            info.appendChild(infoText3);
+            info.appendChild(infoBr3);
+            info.appendChild(infoStrong4);
+            info.appendChild(infoText4);
+            
+            resultContent.appendChild(info);
+            
+            // Create time slots safely
+            data.timeSlots.forEach((slot, index) => {
+                const dateObj = new Date(slot.date);
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const formattedDate = dateObj.toLocaleDateString('pl-PL', options);
+                
+                const item = document.createElement('div');
+                item.className = 'result-item';
+                
+                const itemStrong = document.createElement('strong');
+                itemStrong.textContent = `Okno ${index + 1}: `;
+                const itemText1 = createTextNode(formattedDate);
+                const itemBr = document.createElement('br');
+                const itemEmoji = createTextNode('🕐 ');
+                const itemText2 = createTextNode(`${slot.timeFrom} - ${slot.timeTo}`);
+                
+                item.appendChild(itemStrong);
+                item.appendChild(itemText1);
+                item.appendChild(itemBr);
+                item.appendChild(itemEmoji);
+                item.appendChild(itemText2);
+                
+                resultContent.appendChild(item);
+            });
+            
+            // Set link display
+            const linkStrong = document.createElement('strong');
+            linkStrong.textContent = 'Link publiczny:';
+            const linkBr = document.createElement('br');
+            const linkAnchor = document.createElement('a');
+            linkAnchor.href = data.link;
+            linkAnchor.textContent = data.link;
+            linkAnchor.target = '_blank';
+            linkAnchor.style.color = '#2196F3';
+            linkAnchor.style.wordBreak = 'break-all';
+
+            linkDisplayText.innerHTML = '';
+            linkDisplayText.appendChild(linkStrong);
+            linkDisplayText.appendChild(linkBr);
+            linkDisplayText.appendChild(linkAnchor);
+            
+            // Set up copy button
+            copyBtn.onclick = () => copyToClipboard(data.link);
+            
+            resultDiv.classList.add('show');
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Focus on result for accessibility
+            resultDiv.setAttribute('tabindex', '-1');
+            resultDiv.focus();
+        }
+
+        // ========== MODAL HANDLERS ==========
+        document.getElementById('modalConfirm').addEventListener('click', () => {
+            hideModal();
+            if (modalResolve) modalResolve(true);
+        });
+
+        document.getElementById('modalCancel').addEventListener('click', () => {
+            hideModal();
+            if (modalResolve) modalResolve(false);
+        });
+
+        document.getElementById('confirmModal').addEventListener('click', (e) => {
+            if (e.target.id === 'confirmModal') {
+                hideModal();
+                if (modalResolve) modalResolve(false);
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('confirmModal').classList.contains('show')) {
+                hideModal();
+                if (modalResolve) modalResolve(false);
+            }
+        });
+
+        // ========== INITIALIZATION ==========
+        
+        // Set minimum date
+        document.querySelectorAll('.date-input').forEach(input => {
+            input.min = today;
+        });
+
+        // Fill time selects on startup
+        fillTimeSelects(document);
+        
+        // Add validation to initial slot
+        const initialSlot = document.querySelector('.time-slot');
+        if (initialSlot) {
+            addValidationListeners(initialSlot);
+        }
+
+        // Handle duration chips
+        document.querySelectorAll('.duration-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.duration-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                this.querySelector('input[type="radio"]').checked = true;
+            });
+        });
+
+        // Initialize modal as hidden
+        document.getElementById('confirmModal').setAttribute('aria-hidden', 'true');
+    </script>
+</body>
+</html>
