@@ -463,11 +463,76 @@
 
                 <div class="action-buttons">
                     <button class="btn btn-secondary" onclick="goBack()" aria-label="Wstecz do poprzedniego kroku">Wstecz</button>
-                    <button class="btn btn-primary" id="nextBtn" disabled onclick="nextStep()" aria-label="Przejdź do następnego kroku">Dalej</button>
+                    <button class="btn btn-primary" id="nextBtn" disabled onclick="showClientForm()" aria-label="Przejdź do następnego kroku">Dalej</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal formularza klienta -->
+    <div class="modal-overlay" id="clientFormModal" style="display: none;">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px; color: #333;">Dane kontaktowe</h2>
+            <p style="color: #666; margin-bottom: 20px;" id="selectedDateInfo"></p>
+
+            <form id="clientForm" onsubmit="submitClientForm(event)">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #333;">Imię i nazwisko *</label>
+                    <input type="text" id="clientNameInput" required
+                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;"
+                           placeholder="np. Jan Kowalski">
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #333;">Email *</label>
+                    <input type="email" id="clientEmailInput" required
+                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;"
+                           placeholder="np. jan@example.com">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #333;">Numer lokalu (opcjonalnie)</label>
+                    <input type="text" id="clientUnitInput"
+                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;"
+                           placeholder="np. M12">
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" onclick="closeClientForm()"
+                            style="flex: 1; padding: 12px; background: #f5f5f5; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                        Anuluj
+                    </button>
+                    <button type="submit"
+                            style="flex: 1; padding: 12px; background: #1976d2; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">
+                        Zarezerwuj termin
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+    </style>
 
     <div class="success-message" id="successMessage" role="alert" aria-live="polite"></div>
 
@@ -693,16 +758,22 @@
         }
 
         /**
-         * Get bookings for a specific date and schedule
+         * Get bookings for a specific date and schedule (reads from schedules array)
          */
         function getBookingsForDateAndSchedule(date, scheduleId) {
             try {
-                const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
-                const dateStr = date.toISOString().split('T')[0];
-                
-                return bookings.filter(booking => {
-                    return booking.date === dateStr && booking.scheduleId === scheduleId;
-                });
+                const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
+                const dateStr = typeof date === 'string' ? date : date.toISOString().split('T')[0];
+
+                // Find the schedule
+                const schedule = schedules.find(s => s.id === scheduleId || s.hash === scheduleId);
+
+                if (!schedule || !schedule.bookings) {
+                    return [];
+                }
+
+                // Filter bookings for this date
+                return schedule.bookings.filter(booking => booking.date === dateStr);
             } catch (error) {
                 console.error('Błąd odczytu rezerwacji:', error);
                 return [];
@@ -880,25 +951,45 @@
         }
 
         /**
-         * Save booking to localStorage
+         * Save booking to localStorage (into the schedules array)
          */
         function saveBooking(bookingData) {
             try {
-                // Get existing bookings
-                const existingBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
-                
-                // Add new booking with unique ID
+                // Get existing schedules
+                const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
+
+                // Find the schedule this booking belongs to
+                const scheduleIndex = schedules.findIndex(s =>
+                    s.id === bookingData.scheduleId || s.hash === bookingData.scheduleId
+                );
+
+                if (scheduleIndex === -1) {
+                    console.error('Nie znaleziono harmonogramu:', bookingData.scheduleId);
+                    return false;
+                }
+
+                // Initialize bookings array if it doesn't exist
+                if (!schedules[scheduleIndex].bookings) {
+                    schedules[scheduleIndex].bookings = [];
+                }
+
+                // Create new booking object matching lista_harmonogramow format
                 const newBooking = {
-                    id: Date.now().toString(),
-                    ...bookingData,
+                    date: bookingData.date,
+                    time: bookingData.time,
+                    clientName: bookingData.clientName || 'Klient',
+                    clientEmail: bookingData.clientEmail || '',
+                    unit: bookingData.unit || '',
+                    status: 'planned',
                     createdAt: new Date().toISOString()
                 };
-                
-                existingBookings.push(newBooking);
-                
+
+                // Add booking to the schedule
+                schedules[scheduleIndex].bookings.push(newBooking);
+
                 // Save back to localStorage
-                localStorage.setItem('bookings', JSON.stringify(existingBookings));
-                
+                localStorage.setItem('schedules', JSON.stringify(schedules));
+
                 return true;
             } catch (error) {
                 console.error('Błąd zapisu rezerwacji:', error);
@@ -920,29 +1011,28 @@
             });
         }
 
+        // Store pending booking data
+        let pendingBookingData = null;
+
         /**
-         * Proceed to next step
+         * Show client form modal
          */
-        function nextStep() {
+        function showClientForm() {
             const selectedSlot = document.querySelector('.time-slot.selected');
             const selectedDay = document.querySelector('.day.selected');
-            
+
             if (!selectedSlot || !selectedDay) {
                 showSuccessMessage('Proszę wybrać termin');
                 return;
             }
-            
-            const nextBtn = document.getElementById('nextBtn');
-            nextBtn.classList.add('loading');
-            nextBtn.disabled = true;
-            
+
             // Get selected data
             const time = selectedSlot.getAttribute('data-time') || selectedSlot.textContent.trim();
             const scheduleId = selectedSlot.getAttribute('data-schedule-id');
             const day = parseInt(selectedDay.textContent.trim());
             const month = currentDate.getMonth();
             const year = currentDate.getFullYear();
-            
+
             // Create date object
             const bookingDate = new Date(year, month, day);
             const dateStr = bookingDate.toISOString().split('T')[0];
@@ -952,59 +1042,107 @@
                 month: 'long',
                 day: 'numeric'
             });
-            
+
             // Check if slot is still available
             if (!isSlotAvailable(bookingDate, time, scheduleId)) {
                 showSuccessMessage('❌ Ten termin został już zarezerwowany. Wybierz inny.');
-                nextBtn.classList.remove('loading');
-                nextBtn.disabled = false;
-                // Refresh slots
                 updateTimeSlots(day, month, year);
                 return;
             }
-            
-            // Prepare booking data
-            const bookingData = {
+
+            // Store pending booking data
+            pendingBookingData = {
                 scheduleId: scheduleId,
                 date: dateStr,
                 dateString: dateString,
                 day: day,
-                month: month + 1, // 1-12
+                month: month + 1,
                 year: year,
                 time: time,
                 fullDate: bookingDate.toISOString(),
                 displayDate: `${day} ${MONTHS[month]} ${year}`
             };
-            
+
+            // Update modal info
+            document.getElementById('selectedDateInfo').textContent =
+                `Wybrany termin: ${dateString} o godz. ${time}`;
+
+            // Show modal
+            document.getElementById('clientFormModal').style.display = 'flex';
+            document.getElementById('clientNameInput').focus();
+        }
+
+        /**
+         * Close client form modal
+         */
+        function closeClientForm() {
+            document.getElementById('clientFormModal').style.display = 'none';
+            pendingBookingData = null;
+        }
+
+        /**
+         * Submit client form and save booking
+         */
+        function submitClientForm(event) {
+            event.preventDefault();
+
+            if (!pendingBookingData) {
+                showSuccessMessage('❌ Błąd: brak danych rezerwacji');
+                closeClientForm();
+                return;
+            }
+
+            const clientName = document.getElementById('clientNameInput').value.trim();
+            const clientEmail = document.getElementById('clientEmailInput').value.trim();
+            const clientUnit = document.getElementById('clientUnitInput').value.trim();
+
+            if (!clientName || !clientEmail) {
+                showSuccessMessage('Proszę wypełnić wymagane pola');
+                return;
+            }
+
+            // Add client data to booking
+            const bookingData = {
+                ...pendingBookingData,
+                clientName: clientName,
+                clientEmail: clientEmail,
+                unit: clientUnit
+            };
+
             // Save booking
-            setTimeout(() => {
-                const saved = saveBooking(bookingData);
-                
-                if (saved) {
-                    showSuccessMessage(`✅ Rezerwacja zapisana: ${dateString} o ${time}`);
-                    
-                    // Reset selection
+            const saved = saveBooking(bookingData);
+
+            if (saved) {
+                closeClientForm();
+                showSuccessMessage(`✅ Rezerwacja zapisana: ${bookingData.dateString} o ${bookingData.time}`);
+
+                // Reset selection
+                const selectedSlot = document.querySelector('.time-slot.selected');
+                const selectedDay = document.querySelector('.day.selected');
+                if (selectedSlot) {
                     selectedSlot.classList.remove('selected');
                     selectedSlot.setAttribute('aria-selected', 'false');
-                    selectedDay.classList.remove('selected');
-                    document.getElementById('nextBtn').disabled = true;
-                    
-                    // Refresh slots to remove booked one
-                    updateTimeSlots(day, month, year);
-                    
-                    // Optionally redirect to home page
-                    setTimeout(() => {
-                        if (confirm('Rezerwacja została zapisana! Czy chcesz wrócić do strony głównej?')) {
-                            window.location.href = 'index.html';
-                        }
-                    }, 500);
-                } else {
-                    showSuccessMessage('❌ Błąd podczas zapisywania rezerwacji');
                 }
-                
-                nextBtn.classList.remove('loading');
-                nextBtn.disabled = false;
-            }, 1000);
+                if (selectedDay) {
+                    selectedDay.classList.remove('selected');
+                }
+                document.getElementById('nextBtn').disabled = true;
+
+                // Clear form
+                document.getElementById('clientForm').reset();
+
+                // Refresh slots
+                updateTimeSlots(bookingData.day, bookingData.month - 1, bookingData.year);
+
+                // Redirect
+                setTimeout(() => {
+                    if (confirm('Rezerwacja została zapisana! Czy chcesz wrócić do strony głównej?')) {
+                        window.location.href = 'lista_harmonogramow.html';
+                    }
+                }, 500);
+            } else {
+                showSuccessMessage('❌ Błąd podczas zapisywania rezerwacji');
+            }
         }
 
         // ========== INITIALIZATION ==========
