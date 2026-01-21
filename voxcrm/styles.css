@@ -28,16 +28,22 @@
    1. CSS VARIABLES (Design Tokens)
    ============================================ */
 :root {
+    /* === VoxDeveloper Brand Colors (zgodne z bazastyli) === */
+    --custom-primary: #8ebf29;
+    --custom-primary-rgb: 142, 191, 41;
+    --label-color: #174b99;
+    --section-border-color: #8ebf29;
+
     /* === Primary Colors (VoxCRM Brand) === */
-    --color-primary: #0066cc;
-    --color-primary-dark: #004d99;
-    --color-primary-light: #3399ff;
-    --color-primary-bg: #e6f2ff;
+    --color-primary: #8ebf29;
+    --color-primary-dark: #7aa824;
+    --color-primary-light: #a5d147;
+    --color-primary-bg: #f0f7e6;
 
     /* === Secondary Colors === */
-    --color-secondary: #6c757d;
-    --color-secondary-dark: #545b62;
-    --color-secondary-light: #adb5bd;
+    --color-secondary: #174b99;
+    --color-secondary-dark: #123d7a;
+    --color-secondary-light: #2a6bc9;
 
     /* === Semantic Colors === */
     --color-success: #4CAF50;
@@ -206,10 +212,10 @@ input, select {
    3. HEADER & NAVIGATION
    ============================================ */
 
-/* Top blue gradient bar */
+/* Top gradient bar (VoxDeveloper brand) */
 .top-bar {
     height: 4px;
-    background: linear-gradient(90deg, #0066cc 0%, #00A0B0 100%);
+    background: linear-gradient(90deg, #8ebf29 0%, #00A0B0 100%);
 }
 
 .main-header {
@@ -552,24 +558,76 @@ input, select {
     border-radius: var(--radius-md);
     transition: all var(--transition-fast);
     white-space: nowrap;
+    border: none;
+    cursor: pointer;
 }
 
-.btn-primary {
+/* Primary button (zielony VoxDeveloper) */
+.btn-primary,
+.btn-dialog-primary {
     background: var(--color-primary);
     color: var(--text-inverse);
+    border: 1px solid var(--color-primary);
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-dialog-primary:hover {
     background: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
 }
 
+/* Success button */
 .btn-success {
     background: var(--color-success);
     color: var(--text-inverse);
+    border: 1px solid var(--color-success);
 }
 
 .btn-success:hover {
     background: var(--color-success-dark);
+    border-color: var(--color-success-dark);
+}
+
+/* Secondary button (szary outline - zgodne z bazastyli) */
+.btn-dialog-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6c757d;
+    background-color: #fff;
+    border: 1px solid #6c757d;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-dialog-secondary:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+/* Info button (niebieski - zgodne z bazastyli) */
+.btn-dialog-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #fff;
+    background-color: #0d6efd;
+    border: 1px solid #0d6efd;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-dialog-info:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
 }
 
 .btn-outline {
@@ -1578,8 +1636,11 @@ input, select {
 }
 
 /* ============================================
-   12. MODALS
+   12. MODALS / DIALOGS (kompatybilność z bazastyli)
    ============================================ */
+
+/* Aliasy zgodne z bazastyli - .dialog-* mapuje na .modal-* */
+.dialog-overlay,
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -1589,8 +1650,24 @@ input, select {
     justify-content: center;
     z-index: var(--z-modal);
     backdrop-filter: blur(2px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
+.dialog-overlay.show,
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Legacy support - modal-overlay bez klasy show jest widoczny */
+.modal-overlay:not(.show) {
+    opacity: 1;
+    visibility: visible;
+}
+
+.dialog-modal,
 .modal-content {
     background: var(--color-white);
     border-radius: var(--radius-xl);
@@ -1598,12 +1675,20 @@ input, select {
     max-width: 90vw;
     max-height: 90vh;
     overflow: hidden;
+    transform: scale(0.95);
+    transition: transform 0.2s ease;
+}
+
+.dialog-overlay.show .dialog-modal,
+.modal-overlay .modal-content {
+    transform: scale(1);
 }
 
 .quick-actions-modal {
     width: 400px;
 }
 
+.dialog-header,
 .modal-header {
     display: flex;
     align-items: center;
@@ -1612,11 +1697,15 @@ input, select {
     border-bottom: 1px solid var(--border-color);
 }
 
+.dialog-header h3,
+.dialog-title,
 .modal-header h3 {
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-semibold);
+    margin: 0;
 }
 
+.dialog-close,
 .modal-close {
     width: 32px;
     height: 32px;
@@ -1626,15 +1715,31 @@ input, select {
     color: var(--text-muted);
     border-radius: var(--radius-md);
     transition: all var(--transition-fast);
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
+.dialog-close:hover,
 .modal-close:hover {
     background: var(--color-gray-100);
     color: var(--text-secondary);
 }
 
+.dialog-body,
 .modal-body {
     padding: var(--spacing-xl);
+    overflow-y: auto;
+    flex: 1;
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    border-top: 1px solid var(--border-color);
+    background-color: var(--color-gray-50);
 }
 
 .quick-action-grid {
